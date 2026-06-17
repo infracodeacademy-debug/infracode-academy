@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getChapter } from "@/actions/get-chapter";
 import { Banner } from "@/components/banner";
 import { Separator } from "@/components/ui/separator";
+import { File } from "lucide-react";
 
 import { VideoPlayer } from "./_components/video-player";
 import { CourseEnrollButton } from "./_components/course-enroll-button";
@@ -25,6 +26,7 @@ const ChapterIdPage = async (props: {
     nextChapter,
     userProgress,
     purchase,
+    attachments,
   } = await getChapter({
     userId,
     chapterId: params.chapterId,
@@ -92,6 +94,32 @@ const ChapterIdPage = async (props: {
               {chapter.description}
             </div>
           </div>
+          {!!attachments.length && (
+            <>
+              <Separator className="my-8 bg-white/10" />
+              <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-x-2">
+                  <File className="h-5 w-5 text-purple-400" />
+                  Recursos Descargables
+                </h3>
+                <div className="space-y-3">
+                  {attachments.map((attachment) => (
+                    <a
+                      href={attachment.url}
+                      target="_blank"
+                      key={attachment.id}
+                      className="flex items-center p-3 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 rounded-lg transition-colors group"
+                    >
+                      <File className="h-4 w-4 mr-2 flex-shrink-0 text-purple-400 group-hover:text-purple-300" />
+                      <p className="text-sm line-clamp-1 flex-1 font-medium group-hover:text-white transition">
+                        {attachment.name}
+                      </p>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -27,7 +27,16 @@ const ChapterIdPage = async (props: {
       courseId: params.courseId,
     },
     include: {
-      quiz: true,
+      quiz: {
+        include: {
+          questions: {
+            orderBy: { position: "asc" },
+            include: {
+              options: true
+            }
+          }
+        }
+      },
     }
   });
 

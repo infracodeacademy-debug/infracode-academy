@@ -8,6 +8,7 @@ import { ImageForm } from "./_components/image-form";
 import { CategoryForm } from "./_components/category-form";
 import { PriceForm } from "./_components/price-form";
 import { ChaptersForm } from "./_components/chapters-form";
+import { AttachmentForm } from "./_components/attachment-form";
 import { Actions } from "./_components/actions";
 
 const CourseIdPage = async (props: {
@@ -29,6 +30,11 @@ const CourseIdPage = async (props: {
       chapters: {
         orderBy: {
           position: "asc",
+        },
+      },
+      attachments: {
+        orderBy: {
+          createdAt: "desc",
         },
       },
     },
@@ -142,6 +148,20 @@ const CourseIdPage = async (props: {
                 </h2>
               </div>
               <PriceForm
+                initialData={course}
+                courseId={course.id}
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-x-3 mb-6 mt-12">
+                <div className="p-3 bg-purple-500/20 backdrop-blur-md rounded-xl border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                  <LayoutDashboard className="h-6 w-6 text-purple-400" />
+                </div>
+                <h2 className="text-2xl font-semibold text-white tracking-tight">
+                  Recursos y Archivos
+                </h2>
+              </div>
+              <AttachmentForm
                 initialData={course}
                 courseId={course.id}
               />

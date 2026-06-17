@@ -44,7 +44,14 @@ export const getChapter = async ({
 
     let nextChapter = null;
 
+    let attachments = [];
+
     if (purchase || chapter.isFree) {
+      attachments = await db.attachment.findMany({
+        where: {
+          courseId: courseId
+        }
+      });
       nextChapter = await db.chapter.findFirst({
         where: {
           courseId: courseId,
@@ -74,7 +81,7 @@ export const getChapter = async ({
       nextChapter,
       userProgress,
       purchase,
-      attachments: [] 
+      attachments 
     };
   } catch (error) {
     console.log("[GET_CHAPTER]", error);
