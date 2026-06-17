@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import axios from "axios";
-import { HelpCircle, Loader2, PlusCircle, Trash, CheckCircle } from "lucide-react";
+import { HelpCircle, Loader2, PlusCircle, Trash, CheckCircle, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";

@@ -116,7 +116,7 @@ export const AttachmentForm = ({
           <div className="mt-4 border border-dashed border-white/20 rounded-xl p-4 bg-white/5">
             <FileUpload
               endpoint="courseAttachment"
-              onChange={(url) => {
+              onChange={(url?: string) => {
                 if (url) {
                   onSubmit({ url: url });
                 }

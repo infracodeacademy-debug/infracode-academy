@@ -12,7 +12,7 @@ import { CourseProgressButton } from "./_components/course-progress-button";
 import { QuizView } from "./_components/quiz-view";
 
 import { CourseComments } from "./_components/course-comments";
-import { CourseReviews } from "../_components/course-reviews";
+import { CourseReviews } from "../../_components/course-reviews";
 
 const ChapterIdPage = async (props: {
   params: Promise<{ courseId: string; chapterId: string }>

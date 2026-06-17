@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { Attachment } from "@prisma/client";
 
 interface GetChapterProps {
   userId: string;
@@ -73,7 +74,7 @@ export const getChapter = async ({
 
     let nextChapter = null;
 
-    let attachments = [];
+    let attachments: Attachment[] = [];
 
     if (purchase || chapter.isFree) {
       attachments = await db.attachment.findMany({
