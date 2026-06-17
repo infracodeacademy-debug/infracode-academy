@@ -1,13 +1,10 @@
-const { PrismaClient } = require('@prisma/client');
-const { PrismaLibSQL } = require('@prisma/adapter-libsql');
-const { createClient } = require('@libsql/client');
+require('dotenv').config({ path: __dirname + '/.env' });
+const { PrismaClient } = require("@prisma/client");
 
-const libsql = createClient({ url: "file:./dev.db" });
-const adapter = new PrismaLibSQL(libsql);
+const db = new PrismaClient();
 
-try {
-  const prisma = new PrismaClient({ adapter });
-  console.log("Success with adapter!");
-} catch(e) {
-  console.log("Failed with adapter:", e.message);
+async function run() {
+  const categories = await db.category.findMany();
+  console.log("Categories found:", categories);
 }
+run();
