@@ -1,14 +1,7 @@
+require("dotenv").config({ path: __dirname + '/../.env' });
 const { PrismaClient } = require("@prisma/client");
-const { Pool, neonConfig } = require("@neondatabase/serverless");
-const { PrismaNeon } = require("@prisma/adapter-neon");
-const ws = require("ws");
 
-neonConfig.webSocketConstructor = ws;
-
-const connectionString = "process.env.DATABASE_URL";
-const pool = new Pool({ connectionString });
-const adapter = new PrismaNeon(pool);
-const database = new PrismaClient({ adapter });
+const database = new PrismaClient({});
 
 async function main() {
   try {
