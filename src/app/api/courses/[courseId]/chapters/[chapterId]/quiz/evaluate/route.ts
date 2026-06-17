@@ -34,12 +34,18 @@ export async function POST(
     const totalQuestions = quiz.questions.length;
 
     if (totalQuestions === 0) {
-      return NextResponse.json({ score: 100 });
+      return NextResponse.json({ score: 100, correctAnswers: {} });
     }
+
+    const correctAnswers: Record<string, string> = {};
 
     quiz.questions.forEach((question) => {
       const selectedOptionId = answers[question.id];
       const correctOption = question.options.find(opt => opt.isCorrect);
+
+      if (correctOption) {
+        correctAnswers[question.id] = correctOption.id;
+      }
 
       if (correctOption && selectedOptionId === correctOption.id) {
         correctCount++;
@@ -79,7 +85,7 @@ export async function POST(
       }
     }
 
-    return NextResponse.json({ score });
+    return NextResponse.json({ score, correctAnswers });
   } catch (error) {
     console.log("[QUIZ_EVALUATE]", error);
     return new NextResponse("Internal Error", { status: 500 });
