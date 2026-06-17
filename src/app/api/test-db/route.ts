@@ -6,21 +6,15 @@ export async function GET() {
     const rawUrl = process.env.DATABASE_URL || "";
     const connectionString = rawUrl.trim().replace(/^["']|["']$/g, '');
     
-    // Test Pool creation directly
-    const pool = new Pool({ connectionString });
-    await pool.query('SELECT 1 as result');
-    
+    if (!connectionString) {
+      return NextResponse.json({ error: "Empty connectionString" });
+    }
+
     return NextResponse.json({ 
-      success: true, 
-      connectionStringLength: connectionString.length,
-      startsWith: connectionString.substring(0, 5)
+      attemptedConnectionString: connectionString,
+      isString: typeof connectionString === 'string'
     });
   } catch (error: any) {
-    return NextResponse.json({ 
-      success: false, 
-      error: error.message, 
-      stack: error.stack,
-      name: error.name
-    }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
