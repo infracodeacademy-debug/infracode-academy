@@ -9,6 +9,10 @@ import { File } from "lucide-react";
 import { VideoPlayer } from "./_components/video-player";
 import { CourseEnrollButton } from "./_components/course-enroll-button";
 import { CourseProgressButton } from "./_components/course-progress-button";
+import { QuizView } from "./_components/quiz-view";
+
+import { CourseComments } from "./_components/course-comments";
+import { CourseReviews } from "../_components/course-reviews";
 
 const ChapterIdPage = async (props: {
   params: Promise<{ courseId: string; chapterId: string }>
@@ -39,6 +43,8 @@ const ChapterIdPage = async (props: {
 
   const isLocked = !chapter.isFree && !purchase;
   const completeOnEnd = !!purchase && !userProgress?.isCompleted;
+  
+  const hasQuiz = chapter.quiz?.isActive && chapter.quiz.questions.length > 0;
 
   return ( 
     <div className="min-h-full pb-20 relative">
@@ -75,12 +81,18 @@ const ChapterIdPage = async (props: {
               {chapter.title}
             </h2>
             {purchase ? (
-              <CourseProgressButton
-                chapterId={params.chapterId}
-                courseId={params.courseId}
-                nextChapterId={nextChapter?.id}
-                isCompleted={!!userProgress?.isCompleted}
-              />
+              hasQuiz ? (
+                <div className="flex items-center text-sm font-medium text-emerald-400 bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20">
+                  Resuelve el cuestionario
+                </div>
+              ) : (
+                <CourseProgressButton
+                  chapterId={params.chapterId}
+                  courseId={params.courseId}
+                  nextChapterId={nextChapter?.id}
+                  isCompleted={!!userProgress?.isCompleted}
+                />
+              )
             ) : (
               <CourseEnrollButton
                 courseId={params.courseId}
@@ -94,6 +106,15 @@ const ChapterIdPage = async (props: {
               {chapter.description}
             </div>
           </div>
+          {hasQuiz && (
+            <QuizView 
+              quiz={chapter.quiz!}
+              courseId={params.courseId}
+              chapterId={params.chapterId}
+              nextChapterId={nextChapter?.id}
+              isCompleted={!!userProgress?.isCompleted}
+            />
+          )}
           {!!attachments.length && (
             <>
               <Separator className="my-8 bg-white/10" />
@@ -121,6 +142,20 @@ const ChapterIdPage = async (props: {
             </>
           )}
         </div>
+        
+        {/* Render Q&A Forum */}
+        <CourseComments 
+          comments={chapter.comments || []}
+          courseId={params.courseId}
+          chapterId={params.chapterId}
+        />
+        
+        {/* Render Reviews */}
+        <CourseReviews
+          reviews={course.reviews || []}
+          courseId={params.courseId}
+          hasPurchased={!!purchase}
+        />
       </div>
     </div>
    );

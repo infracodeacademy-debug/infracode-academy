@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { Chapter, Course, UserProgress } from "@prisma/client"
 import { redirect } from "next/navigation";
 
@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { CourseProgress } from "@/components/course-progress";
 
 import { CourseSidebarItem } from "./course-sidebar-item";
+import { CertificateButton } from "@/components/certificate-button";
 
 interface CourseSidebarProps {
   course: Course & {
@@ -21,6 +22,7 @@ export const CourseSidebar = async ({
   progressCount,
 }: CourseSidebarProps) => {
   const { userId } = await auth();
+  const user = await currentUser();
 
   if (!userId) {
     return redirect("/");
@@ -45,11 +47,17 @@ export const CourseSidebar = async ({
           {course.title}
         </h1>
         {purchase && (
-          <div className="mt-10 relative z-10">
+          <div className="mt-10 relative z-10 flex flex-col gap-y-4">
             <CourseProgress
               variant="success"
               value={progressCount}
             />
+            {progressCount === 100 && (
+              <CertificateButton 
+                courseName={course.title}
+                studentName={user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : "Estudiante Destacado"}
+              />
+            )}
           </div>
         )}
       </div>

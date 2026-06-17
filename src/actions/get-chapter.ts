@@ -28,6 +28,11 @@ export const getChapter = async ({
       },
       select: {
         price: true,
+        reviews: {
+          orderBy: {
+            createdAt: "desc"
+          }
+        }
       }
     });
 
@@ -35,6 +40,30 @@ export const getChapter = async ({
       where: {
         id: chapterId,
         isPublished: true,
+      },
+      include: {
+        comments: {
+          orderBy: {
+            createdAt: "desc"
+          }
+        },
+        quiz: {
+          include: {
+            questions: {
+              orderBy: { position: "asc" },
+              include: {
+                options: {
+                  select: {
+                    id: true,
+                    text: true,
+                    questionId: true,
+                    // DO NOT select isCorrect here, so students can't cheat by inspecting network!
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     });
 

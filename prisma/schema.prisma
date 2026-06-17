@@ -23,6 +23,7 @@ model Course {
   chapters    Chapter[]
   attachments Attachment[]
   purchases   Purchase[]
+  reviews     Review[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -64,6 +65,7 @@ model Chapter {
 
   userProgress UserProgress[]
   quiz         Quiz?
+  comments     Comment[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -133,14 +135,39 @@ model Question {
 }
 
 model Option {
-  id         String   @id @default(uuid())
-  questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  text       String
-  isCorrect  Boolean  @default(false)
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(uuid())
+  questionId  String
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text        String
+  isCorrect   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([questionId])
+}
+
+model Comment {
+  id          String   @id @default(uuid())
+  userId      String
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  text        String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([chapterId])
+}
+
+model Review {
+  id          String   @id @default(uuid())
+  userId      String
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  rating      Int      // 1 to 5
+  text        String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([courseId])
+  @@unique([userId, courseId])
 }
