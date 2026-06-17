@@ -35,27 +35,27 @@ export const CourseSidebarItem = ({
       onClick={onClick}
       type="button"
       className={cn(
-        "flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20 dark:text-slate-400 dark:hover:bg-slate-800",
-        isActive && "text-slate-700 bg-slate-200/20 hover:bg-slate-200/20 hover:text-slate-700 dark:text-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800/50",
-        isCompleted && "text-emerald-700 hover:text-emerald-700 dark:text-emerald-500 dark:hover:text-emerald-500",
-        isCompleted && isActive && "bg-emerald-200/20 dark:bg-emerald-900/20"
+        "flex items-center gap-x-2 text-slate-400 text-sm font-[500] mx-3 px-3 py-1.5 rounded-xl transition-all duration-300 hover:text-white hover:bg-white/5",
+        isActive && "text-white bg-white/10 hover:bg-white/10 shadow-[inset_0_0_20px_rgba(255,255,255,0.05)]",
+        isCompleted && "text-emerald-400 hover:text-emerald-300",
+        isCompleted && isActive && "bg-emerald-500/10 hover:bg-emerald-500/10 shadow-[inset_0_0_20px_rgba(16,185,129,0.1)]"
       )}
     >
-      <div className="flex items-center gap-x-2 py-4">
+      <div className="flex items-center gap-x-2 py-2">
         <Icon
-          size={22}
+          size={20}
           className={cn(
-            "text-slate-500 dark:text-slate-400",
-            isActive && "text-slate-700 dark:text-slate-200",
-            isCompleted && "text-emerald-700 dark:text-emerald-500"
+            "text-slate-400 transition-colors",
+            isActive && "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]",
+            isCompleted && "text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]"
           )}
         />
-        {label}
+        <span className="truncate">{label}</span>
       </div>
       <div className={cn(
-        "ml-auto opacity-0 border-2 border-slate-700 h-full transition-all dark:border-slate-200",
-        isActive && "opacity-100",
-        isCompleted && "border-emerald-700 dark:border-emerald-500"
+        "ml-auto opacity-0 w-1.5 h-1.5 rounded-full transition-all duration-300",
+        isActive && "opacity-100 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]",
+        isCompleted && "bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.8)]"
       )} />
     </button>
   )

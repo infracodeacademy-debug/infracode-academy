@@ -7,6 +7,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface CourseProgressButtonProps {
   chapterId: string;
@@ -52,11 +53,16 @@ export const CourseProgressButton = ({
       onClick={onClick}
       disabled={isLoading}
       type="button"
-      variant={isCompleted ? "outline" : "default"}
-      className={isCompleted ? "w-full md:w-auto" : "w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white"}
+      size="lg"
+      className={cn(
+        "w-full md:w-auto font-semibold px-8 transition-all duration-300",
+        isCompleted 
+          ? "bg-slate-800 hover:bg-slate-700 text-white border border-white/10" 
+          : "magnetic-button bg-emerald-500 hover:bg-emerald-400 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)]"
+      )}
     >
       {isCompleted ? "Desmarcar completado" : "Marcar como completado"}
-      <Icon className="h-4 w-4 ml-2" />
+      <Icon className={cn("h-5 w-5 ml-2", isCompleted ? "text-slate-400" : "text-white")} />
     </Button>
   )
 }

@@ -39,7 +39,10 @@ const ChapterIdPage = async (props: {
   const completeOnEnd = !!purchase && !userProgress?.isCompleted;
 
   return ( 
-    <div>
+    <div className="min-h-full pb-20 relative">
+      {/* Background Ambient Glow for the entire page */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[400px] bg-brand-primary/10 blur-[150px] pointer-events-none" />
+
       {userProgress?.isCompleted && (
         <Banner
           variant="success"
@@ -52,8 +55,8 @@ const ChapterIdPage = async (props: {
           label="Necesitas adquirir este curso para ver el capítulo."
         />
       )}
-      <div className="flex flex-col max-w-4xl mx-auto pb-20">
-        <div className="p-4">
+      <div className="flex flex-col max-w-5xl mx-auto pt-8 px-4 sm:px-6 relative z-10">
+        <div className="w-full">
           <VideoPlayer
             chapterId={params.chapterId}
             title={chapter.title}
@@ -64,9 +67,9 @@ const ChapterIdPage = async (props: {
             completeOnEnd={completeOnEnd}
           />
         </div>
-        <div>
-          <div className="p-4 flex flex-col md:flex-row items-center justify-between">
-            <h2 className="text-2xl font-semibold mb-2">
+        <div className="mt-8 glass-card border-white/10 rounded-2xl p-6 md:p-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <h2 className="text-3xl font-bold text-white tracking-tight">
               {chapter.title}
             </h2>
             {purchase ? (
@@ -83,9 +86,9 @@ const ChapterIdPage = async (props: {
               />
             )}
           </div>
-          <Separator />
-          <div>
-            <div className="p-4 whitespace-pre-wrap">
+          <Separator className="my-8 bg-white/10" />
+          <div className="prose prose-invert prose-slate max-w-none">
+            <div className="text-slate-300 text-lg leading-relaxed whitespace-pre-wrap">
               {chapter.description}
             </div>
           </div>
