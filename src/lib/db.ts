@@ -1,9 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { Pool, neonConfig } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import ws from "ws";
-
-neonConfig.webSocketConstructor = ws;
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -16,7 +13,7 @@ const getPrisma = () => {
   const connectionString = rawUrl.trim().replace(/^["']|["']$/g, '');
   
   const pool = new Pool({ connectionString });
-  const adapter = new PrismaNeon(pool as any);
+  const adapter = new PrismaPg(pool);
   
   const client = new PrismaClient({ adapter });
   if (process.env.NODE_ENV !== "production") {
