@@ -10,6 +10,7 @@ import { ChapterAccessForm } from "./_components/chapter-access-form";
 import { ChapterVideoForm } from "./_components/chapter-video-form";
 import { ChapterActions } from "./_components/chapter-actions";
 import { ChapterQuizForm } from "./_components/chapter-quiz-form";
+import { ChapterAssessmentForm } from "./_components/chapter-assessment-form";
 
 const ChapterIdPage = async (props: {
   params: Promise<{ courseId: string; chapterId: string }>
@@ -37,6 +38,7 @@ const ChapterIdPage = async (props: {
           }
         }
       },
+      openAssessment: true,
     }
   });
 
@@ -118,6 +120,11 @@ const ChapterIdPage = async (props: {
             </div>
             <ChapterAccessForm
               initialData={chapter}
+              courseId={params.courseId}
+              chapterId={params.chapterId}
+            />
+            <ChapterAssessmentForm 
+              initialData={chapter.openAssessment}
               courseId={params.courseId}
               chapterId={params.chapterId}
             />

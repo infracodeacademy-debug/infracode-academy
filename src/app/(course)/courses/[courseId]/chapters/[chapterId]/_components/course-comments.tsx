@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface CourseCommentsProps {
-  comments: Comment[];
+  comments: (Comment & { replies: Comment[] })[];
   courseId: string;
   chapterId: string;
 }
@@ -26,6 +26,7 @@ export const CourseComments = ({
   const router = useRouter();
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
 
   const onSubmit = async () => {
     if (!text.trim()) return;
@@ -45,6 +46,23 @@ export const CourseComments = ({
     }
   }
 
+  const onReply = async (parentId: string, replyText: string) => {
+    if (!replyText.trim()) return;
+    try {
+      setIsLoading(true);
+      await axios.post(`/api/courses/${courseId}/chapters/${chapterId}/comments/${parentId}/reply`, {
+        text: replyText
+      });
+      toast.success("Respuesta publicada");
+      setReplyingTo(null);
+      router.refresh();
+    } catch {
+      toast.error("Error al publicar respuesta");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="mt-8 glass-card border-white/10 rounded-2xl p-6 relative overflow-hidden group">
       <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -61,7 +79,7 @@ export const CourseComments = ({
       <div className="relative z-10">
         <div className="flex gap-x-3 mb-8">
           <Input 
-            placeholder="Escribe tu duda o comentario..."
+            placeholder="Escribe tu duda o comentario principal..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             disabled={isLoading}
@@ -79,7 +97,7 @@ export const CourseComments = ({
           </Button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           {comments.length === 0 && (
             <p className="text-center text-slate-400 py-4 italic">
               Sé el primero en dejar un comentario o hacer una pregunta.
@@ -95,9 +113,55 @@ export const CourseComments = ({
                   {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: es })}
                 </span>
               </div>
-              <p className="text-slate-200 whitespace-pre-wrap text-sm leading-relaxed">
+              <p className="text-slate-200 whitespace-pre-wrap text-sm leading-relaxed mb-3">
                 {comment.text}
               </p>
+
+              {comment.replies && comment.replies.length > 0 && (
+                <div className="mt-3 pl-4 border-l-2 border-white/10 space-y-3">
+                  {comment.replies.map(reply => (
+                    <div key={reply.id} className="bg-slate-900/40 rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-brand-secondary">Respuesta</span>
+                        <span className="text-xs text-slate-500">
+                          {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true, locale: es })}
+                        </span>
+                      </div>
+                      <p className="text-slate-300 text-sm">{reply.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="mt-3">
+                {replyingTo === comment.id ? (
+                  <div className="flex gap-x-2">
+                    <Input 
+                      autoFocus
+                      placeholder="Escribe tu respuesta..."
+                      disabled={isLoading}
+                      className="bg-slate-900/50 border-white/10 text-white h-8 text-sm"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") onReply(comment.id, e.currentTarget.value);
+                        if (e.key === "Escape") setReplyingTo(null);
+                      }}
+                      onBlur={(e) => {
+                        if(e.currentTarget.value) onReply(comment.id, e.currentTarget.value);
+                        else setReplyingTo(null);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <Button 
+                    onClick={() => setReplyingTo(comment.id)}
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-slate-400 hover:text-white h-8 text-xs p-0"
+                  >
+                    Responder
+                  </Button>
+                )}
+              </div>
             </div>
           ))}
         </div>

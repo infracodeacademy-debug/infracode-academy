@@ -52,12 +52,11 @@ export const CourseSidebar = async ({
               variant="success"
               value={progressCount}
             />
-            {progressCount === 100 && (
-              <CertificateButton 
-                courseName={course.title}
-                studentName={user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : "Estudiante Destacado"}
-              />
-            )}
+            <CertificateButton 
+              courseName={course.title}
+              studentName={user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : "Estudiante Destacado"}
+              isLocked={progressCount !== 100}
+            />
           </div>
         )}
       </div>

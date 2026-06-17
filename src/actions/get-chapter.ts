@@ -44,6 +44,16 @@ export const getChapter = async ({
       },
       include: {
         comments: {
+          where: {
+            parentId: null
+          },
+          include: {
+            replies: {
+              orderBy: {
+                createdAt: "asc"
+              }
+            }
+          },
           orderBy: {
             createdAt: "desc"
           }
@@ -76,12 +86,33 @@ export const getChapter = async ({
 
     let attachments: Attachment[] = [];
 
+    let openAssessment = null;
+    let studentAssessment = null;
+
     if (purchase || chapter.isFree) {
       attachments = await db.attachment.findMany({
         where: {
           courseId: courseId
         }
       });
+
+      openAssessment = await db.openAssessment.findUnique({
+        where: {
+          chapterId: chapterId,
+        }
+      });
+
+      if (openAssessment) {
+        studentAssessment = await db.studentAssessment.findUnique({
+          where: {
+            userId_assessmentId: {
+              userId,
+              assessmentId: openAssessment.id,
+            }
+          }
+        });
+      }
+
       nextChapter = await db.chapter.findFirst({
         where: {
           courseId: courseId,
@@ -108,10 +139,12 @@ export const getChapter = async ({
     return {
       chapter,
       course,
+      attachments,
       nextChapter,
       userProgress,
       purchase,
-      attachments 
+      openAssessment,
+      studentAssessment,
     };
   } catch (error) {
     console.log("[GET_CHAPTER]", error);

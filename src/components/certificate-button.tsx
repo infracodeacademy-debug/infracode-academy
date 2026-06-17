@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, Lock } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { format } from "date-fns";
@@ -75,7 +75,7 @@ export const CertificateButton = ({
       document.body.appendChild(certContainer);
 
       const canvas = await html2canvas(certContainer, {
-        scale: 2, // High quality
+        scale: 2, 
         backgroundColor: "#0f172a",
         logging: false
       });
@@ -97,6 +97,19 @@ export const CertificateButton = ({
     } finally {
       setIsGenerating(false);
     }
+  }
+
+  if (isLocked) {
+    return (
+      <Button
+        disabled
+        className="w-full bg-slate-800 text-slate-500 border border-slate-700 justify-start"
+        variant="outline"
+      >
+        <Lock className="h-4 w-4 mr-2" />
+        Certificado Bloqueado
+      </Button>
+    )
   }
 
   return (

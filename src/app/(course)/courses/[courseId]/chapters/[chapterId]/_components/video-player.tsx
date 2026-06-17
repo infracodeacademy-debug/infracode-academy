@@ -55,14 +55,6 @@ export const VideoPlayer = ({
       {/* Dynamic ambient glow that reacts to video bounding box */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/20 via-transparent to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-      {!isReady && !isLocked && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm z-10">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="h-10 w-10 animate-spin text-brand-primary drop-shadow-[0_0_10px_rgba(111,0,255,0.5)]" />
-            <p className="text-slate-300 font-medium animate-pulse">Cargando experiencia...</p>
-          </div>
-        </div>
-      )}
       {isLocked && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-900/90 backdrop-blur-md flex-col gap-y-4 text-slate-200 z-10 border border-white/5">
           <div className="p-4 bg-white/5 rounded-full border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
@@ -78,10 +70,7 @@ export const VideoPlayer = ({
       )}
       {!isLocked && (
         <video
-          className={cn(
-            "w-full h-full object-cover relative z-0 transition-opacity duration-500",
-            !isReady ? "opacity-0" : "opacity-100"
-          )}
+          className="w-full h-full object-cover relative z-0"
           controls
           controlsList="nodownload"
           onCanPlay={() => setIsReady(true)}

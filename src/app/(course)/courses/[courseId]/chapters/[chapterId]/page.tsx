@@ -13,6 +13,7 @@ import { QuizView } from "./_components/quiz-view";
 
 import { CourseComments } from "./_components/course-comments";
 import { CourseReviews } from "../../_components/course-reviews";
+import { AssessmentView } from "./_components/assessment-view";
 
 const ChapterIdPage = async (props: {
   params: Promise<{ courseId: string; chapterId: string }>
@@ -141,8 +142,18 @@ const ChapterIdPage = async (props: {
               </div>
             </>
           )}
+          )}
         </div>
         
+        {!!openAssessment?.isActive && (
+          <AssessmentView 
+            assessment={openAssessment}
+            studentAssessment={studentAssessment}
+            courseId={params.courseId}
+            chapterId={params.chapterId}
+          />
+        )}
+
         {/* Render Q&A Forum */}
         <CourseComments 
           comments={chapter.comments || []}
