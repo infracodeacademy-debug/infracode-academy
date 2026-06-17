@@ -9,6 +9,7 @@ import { ChapterDescriptionForm } from "./_components/chapter-description-form";
 import { ChapterAccessForm } from "./_components/chapter-access-form";
 import { ChapterVideoForm } from "./_components/chapter-video-form";
 import { ChapterActions } from "./_components/chapter-actions";
+import { ChapterQuizForm } from "./_components/chapter-quiz-form";
 
 const ChapterIdPage = async (props: {
   params: Promise<{ courseId: string; chapterId: string }>
@@ -24,6 +25,9 @@ const ChapterIdPage = async (props: {
     where: {
       id: params.chapterId,
       courseId: params.courseId,
+    },
+    include: {
+      quiz: true,
     }
   });
 
@@ -120,6 +124,11 @@ const ChapterIdPage = async (props: {
             </h2>
           </div>
           <ChapterVideoForm
+            initialData={chapter}
+            courseId={params.courseId}
+            chapterId={params.chapterId}
+          />
+          <ChapterQuizForm
             initialData={chapter}
             courseId={params.courseId}
             chapterId={params.chapterId}
