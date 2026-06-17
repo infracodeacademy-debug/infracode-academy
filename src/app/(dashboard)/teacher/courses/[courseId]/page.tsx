@@ -61,80 +61,91 @@ const CourseIdPage = async (props: {
   const isComplete = requiredFields.every(Boolean);
 
   return ( 
-    <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-y-2">
-          <h1 className="text-3xl font-bold">Configuración del Curso</h1>
-          <span className="text-sm text-slate-500">
-            Completa todos los campos {completionText}
-          </span>
-        </div>
-        <Actions
-          disabled={!isComplete}
-          courseId={params.courseId}
-          isPublished={course.isPublished}
-        />
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-        <div>
-          <div className="flex items-center gap-x-2">
-            <div className="p-2 bg-indigo-100 dark:bg-indigo-900 rounded-md">
-              <LayoutDashboard className="h-6 w-6 text-indigo-700 dark:text-indigo-300" />
-            </div>
-            <h2 className="text-xl">
-              Personaliza tu curso
-            </h2>
+    <div className="p-6 max-w-5xl mx-auto relative">
+      {/* Background ambient light */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 blur-[150px] rounded-full pointer-events-none" />
+
+      <div className="relative z-10">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-10">
+          <div className="flex flex-col gap-y-2">
+            <h1 className="text-4xl font-bold text-white tracking-tight">Configuración del Curso</h1>
+            <span className="text-sm font-medium text-slate-400 bg-slate-900/50 px-3 py-1 rounded-full border border-white/5 inline-flex w-fit">
+              Completa todos los campos {completionText}
+            </span>
           </div>
-          <TitleForm
-            initialData={course}
-            courseId={course.id}
-          />
-          <DescriptionForm
-            initialData={course}
-            courseId={course.id}
-          />
-          <ImageForm
-            initialData={course}
-            courseId={course.id}
-          />
-          <CategoryForm
-            initialData={course}
-            courseId={course.id}
-            options={categories.map((category) => ({
-              label: category.name,
-              value: category.id,
-            }))}
+          <Actions
+            disabled={!isComplete}
+            courseId={params.courseId}
+            isPublished={course.isPublished}
           />
         </div>
-        <div className="space-y-6">
-          <div>
-            <div className="flex items-center gap-x-2">
-              <div className="p-2 bg-indigo-100 dark:bg-indigo-900 rounded-md">
-                <ListChecks className="h-6 w-6 text-indigo-700 dark:text-indigo-300" />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+          <div className="space-y-8">
+            <div>
+              <div className="flex items-center gap-x-3 mb-6">
+                <div className="p-3 bg-brand-primary/20 backdrop-blur-md rounded-xl border border-brand-primary/30 shadow-[0_0_15px_rgba(111,0,255,0.2)]">
+                  <LayoutDashboard className="h-6 w-6 text-brand-primary" />
+                </div>
+                <h2 className="text-2xl font-semibold text-white tracking-tight">
+                  Personaliza tu curso
+                </h2>
               </div>
-              <h2 className="text-xl">
-                Capítulos del curso
-              </h2>
+              <div className="space-y-6">
+                <TitleForm
+                  initialData={course}
+                  courseId={course.id}
+                />
+                <DescriptionForm
+                  initialData={course}
+                  courseId={course.id}
+                />
+                <ImageForm
+                  initialData={course}
+                  courseId={course.id}
+                />
+                <CategoryForm
+                  initialData={course}
+                  courseId={course.id}
+                  options={categories.map((category) => ({
+                    label: category.name,
+                    value: category.id,
+                  }))}
+                />
+              </div>
             </div>
-            <ChaptersForm
-              initialData={course}
-              courseId={course.id}
-            />
           </div>
-          <div>
-            <div className="flex items-center gap-x-2">
-              <div className="p-2 bg-indigo-100 dark:bg-indigo-900 rounded-md">
-                <LayoutDashboard className="h-6 w-6 text-indigo-700 dark:text-indigo-300" />
+          
+          <div className="space-y-12">
+            <div>
+              <div className="flex items-center gap-x-3 mb-6">
+                <div className="p-3 bg-blue-500/20 backdrop-blur-md rounded-xl border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                  <ListChecks className="h-6 w-6 text-blue-400" />
+                </div>
+                <h2 className="text-2xl font-semibold text-white tracking-tight">
+                  Capítulos del curso
+                </h2>
               </div>
-              <h2 className="text-xl">
-                Vende tu curso
-              </h2>
+              <ChaptersForm
+                initialData={course}
+                courseId={course.id}
+              />
             </div>
-            <PriceForm
-              initialData={course}
-              courseId={course.id}
-            />
+            <div>
+              <div className="flex items-center gap-x-3 mb-6">
+                <div className="p-3 bg-emerald-500/20 backdrop-blur-md rounded-xl border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                  <LayoutDashboard className="h-6 w-6 text-emerald-400" />
+                </div>
+                <h2 className="text-2xl font-semibold text-white tracking-tight">
+                  Vende tu curso
+                </h2>
+              </div>
+              <PriceForm
+                initialData={course}
+                courseId={course.id}
+              />
+            </div>
           </div>
         </div>
       </div>

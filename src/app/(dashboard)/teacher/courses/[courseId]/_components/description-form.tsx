@@ -63,22 +63,23 @@ export const DescriptionForm = ({
   }
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-slate-900 border-slate-200 dark:border-slate-800">
-      <div className="font-medium flex items-center justify-between">
+    <div className="mt-6 glass-card border-white/10 rounded-xl p-6 relative overflow-hidden group">
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="font-semibold text-lg flex items-center justify-between text-white relative z-10">
         Descripción del curso
-        <Button onClick={toggleEdit} variant="ghost">
+        <Button onClick={toggleEdit} variant="ghost" className="text-slate-300 hover:text-white hover:bg-white/10 transition-colors">
           {isEditing ? (
             <>Cancelar</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Editar descripción
+              Editar
             </>
           )}
         </Button>
       </div>
       {!isEditing && (
-        <p className={`text-sm mt-2 ${!initialData.description && "text-slate-500 italic"}`}>
+        <p className={`text-sm mt-3 relative z-10 ${!initialData.description ? "text-slate-500 italic" : "text-slate-300"}`}>
           {initialData.description || "Sin descripción"}
         </p>
       )}
@@ -86,7 +87,7 @@ export const DescriptionForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className="space-y-4 mt-4 relative z-10"
           >
             <FormField
               control={form.control}
@@ -98,9 +99,10 @@ export const DescriptionForm = ({
                       disabled={isSubmitting}
                       placeholder="Ej. 'Este curso trata sobre...'"
                       {...field}
+                      className="glass-input text-white border-white/20 focus-visible:ring-brand-primary focus-visible:border-brand-primary min-h-[100px] resize-y"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
@@ -108,6 +110,7 @@ export const DescriptionForm = ({
               <Button
                 disabled={!isValid || isSubmitting}
                 type="submit"
+                className="magnetic-button bg-brand-primary hover:bg-brand-secondary text-white shadow-[0_0_15px_rgba(111,0,255,0.3)] transition-all"
               >
                 Guardar
               </Button>

@@ -83,15 +83,16 @@ export const ChaptersForm = ({
   }
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-slate-900 border-slate-200 dark:border-slate-800 relative">
+    <div className="mt-6 glass-card border-white/10 rounded-xl p-6 relative overflow-hidden group">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       {isUpdating && (
-        <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-md flex items-center justify-center z-10">
-          <Loader2 className="animate-spin h-6 w-6 text-indigo-700" />
+        <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-50">
+          <Loader2 className="animate-spin h-8 w-8 text-brand-primary" />
         </div>
       )}
-      <div className="font-medium flex items-center justify-between">
+      <div className="font-semibold text-lg flex items-center justify-between text-white relative z-10">
         Capítulos del curso
-        <Button onClick={toggleCreating} variant="ghost">
+        <Button onClick={toggleCreating} variant="ghost" className="text-slate-300 hover:text-white hover:bg-white/10 transition-colors">
           {isCreating ? (
             <>Cancelar</>
           ) : (
@@ -106,7 +107,7 @@ export const ChaptersForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className="space-y-4 mt-4 relative z-10"
           >
             <FormField
               control={form.control}
@@ -118,15 +119,17 @@ export const ChaptersForm = ({
                       disabled={isSubmitting}
                       placeholder="Ej. 'Introducción al curso'"
                       {...field}
+                      className="glass-input text-white border-white/20 focus-visible:ring-brand-primary focus-visible:border-brand-primary"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
             <Button
               disabled={!isValid || isSubmitting}
               type="submit"
+              className="magnetic-button bg-brand-primary hover:bg-brand-secondary text-white shadow-[0_0_15px_rgba(111,0,255,0.3)] transition-all"
             >
               Crear
             </Button>
@@ -135,7 +138,7 @@ export const ChaptersForm = ({
       )}
       {!isCreating && (
         <div className={cn(
-          "text-sm mt-2",
+          "text-sm mt-4 relative z-10",
           !initialData.chapters.length && "text-slate-500 italic"
         )}>
           {!initialData.chapters.length && "No hay capítulos"}
@@ -147,7 +150,7 @@ export const ChaptersForm = ({
         </div>
       )}
       {!isCreating && (
-        <p className="text-xs text-muted-foreground mt-4">
+        <p className="text-xs text-slate-400 mt-4 relative z-10 italic">
           Arrastra y suelta para reordenar los capítulos
         </p>
       )}

@@ -74,8 +74,8 @@ export const ChaptersList = ({
                 {(provided) => (
                   <div
                     className={cn(
-                      "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm dark:bg-slate-800 dark:border-slate-800 dark:text-slate-300",
-                      chapter.isPublished && "bg-sky-100 border-sky-200 text-sky-700 dark:bg-sky-900/50 dark:border-sky-800 dark:text-sky-300"
+                      "flex items-center gap-x-2 bg-slate-900/40 backdrop-blur-md border-white/5 border text-slate-300 rounded-xl mb-4 text-sm transition-all duration-200 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]",
+                      chapter.isPublished && "bg-brand-primary/10 border-brand-primary/20 text-white shadow-[0_0_15px_rgba(111,0,255,0.1)]"
                     )}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -83,30 +83,31 @@ export const ChaptersList = ({
                   >
                     <div
                       className={cn(
-                        "px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition dark:border-r-slate-800 dark:hover:bg-slate-700",
-                        chapter.isPublished && "border-r-sky-200 hover:bg-sky-200 dark:border-r-indigo-800 dark:hover:bg-indigo-800/50"
+                        "px-3 py-4 border-r border-white/5 hover:bg-white/5 rounded-l-xl transition",
+                        chapter.isPublished && "border-white/10 hover:bg-brand-primary/20"
                       )}
                       {...provided.dragHandleProps}
                     >
-                      <Grip className="h-5 w-5" />
+                      <Grip className="h-5 w-5 text-slate-400" />
                     </div>
-                    {chapter.title}
-                    <div className="ml-auto pr-2 flex items-center gap-x-2">
+                    <div className="font-medium px-2">
+                      {chapter.title}
+                    </div>
+                    <div className="ml-auto pr-4 flex items-center gap-x-3">
                       {chapter.isFree && (
-                        <Badge>
+                        <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                           Gratis
                         </Badge>
                       )}
                       <Badge className={cn(
-                        "bg-slate-500",
-                        chapter.isPublished && "bg-sky-700 dark:bg-indigo-600"
+                        "bg-slate-800 text-slate-400 border border-white/5",
+                        chapter.isPublished && "bg-brand-primary/20 text-brand-primary border-brand-primary/30"
                       )}>
                         {chapter.isPublished ? "Publicado" : "Borrador"}
                       </Badge>
-                      <Pencil
-                        onClick={() => onEdit(chapter.id)}
-                        className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
-                      />
+                      <div className="p-2 bg-slate-800/50 hover:bg-white/10 rounded-lg cursor-pointer transition-colors" onClick={() => onEdit(chapter.id)}>
+                        <Pencil className="w-4 h-4 text-slate-400 hover:text-white transition" />
+                      </div>
                     </div>
                   </div>
                 )}

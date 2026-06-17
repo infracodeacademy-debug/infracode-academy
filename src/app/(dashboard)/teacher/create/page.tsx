@@ -48,43 +48,58 @@ export default function CreateCoursePage() {
   }
 
   return ( 
-    <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
-      <div className="w-full max-w-xl bg-slate-900/50 p-8 rounded-2xl border border-slate-800">
-        <h1 className="text-2xl font-bold mb-2 text-white">Ponle nombre a tu curso</h1>
-        <p className="text-sm text-slate-400 mb-8">
-          ¿Qué vas a enseñar en este curso? No te preocupes, puedes cambiar esto más tarde.
-        </p>
+    <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6 relative">
+      {/* Background ambient light */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-brand-primary/20 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="w-full max-w-xl glass-card p-10 rounded-3xl border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.3)] relative z-10 animate-in fade-in zoom-in-95 duration-500">
+        <div className="mb-8">
+          <div className="inline-flex items-center justify-center p-3 bg-brand-primary/20 rounded-xl mb-6 shadow-[0_0_20px_rgba(111,0,255,0.2)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-primary"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+          </div>
+          <h1 className="text-3xl font-bold mb-3 text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+            Ponle nombre a tu curso
+          </h1>
+          <p className="text-base text-slate-400">
+            ¿Qué vas a enseñar en este curso? No te preocupes, puedes cambiar esto más tarde.
+          </p>
+        </div>
+        
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-slate-300">Título del curso</FormLabel>
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-slate-300 font-medium">Título del curso</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="ej. 'Master en Redes'"
+                      placeholder="ej. 'Master en Redes de Computadoras'"
                       {...field}
-                      className="bg-slate-950 border-slate-700 text-white focus-visible:ring-indigo-500"
+                      className="glass-input h-14 text-lg border-white/10 text-white focus-visible:ring-brand-primary focus-visible:border-brand-primary transition-all duration-300"
                     />
                   </FormControl>
                   <FormDescription className="text-slate-500">
-                    ¿Qué aprenderán tus alumnos?
+                    Un buen título ayuda a tus alumnos a saber exactamente qué aprenderán.
                   </FormDescription>
                   <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-x-2">
+            <div className="flex items-center gap-x-4 pt-4 border-t border-white/10">
               <Link href="/teacher/courses">
-                <Button type="button" variant="ghost" className="text-slate-300 hover:text-white hover:bg-slate-800">
+                <Button type="button" variant="ghost" className="text-slate-300 hover:text-white hover:bg-white/10 h-12 px-6">
                   Cancelar
                 </Button>
               </Link>
-              <Button type="submit" disabled={!isValid || isSubmitting} className="bg-indigo-600 hover:bg-indigo-700 text-white">
-                Continuar
+              <Button 
+                type="submit" 
+                disabled={!isValid || isSubmitting} 
+                className="magnetic-button h-12 px-8 bg-brand-primary hover:bg-brand-secondary text-white shadow-[0_0_20px_rgba(111,0,255,0.3)] hover:shadow-[0_0_30px_rgba(111,0,255,0.5)] transition-all duration-300"
+              >
+                Continuar al Editor
               </Button>
             </div>
           </form>

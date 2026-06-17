@@ -54,31 +54,31 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="flex items-center py-4 justify-between">
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
         <Input
           placeholder="Filtrar cursos..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm glass-input text-white border-white/10"
         />
         <Link href="/teacher/create">
-          <Button>
+          <Button className="magnetic-button bg-brand-primary text-white hover:bg-brand-secondary shadow-[0_0_20px_rgba(111,0,255,0.3)] hover:shadow-[0_0_30px_rgba(111,0,255,0.5)] transition-all duration-300">
             <PlusCircle className="h-4 w-4 mr-2" />
             Nuevo curso
           </Button>
         </Link>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-xl border border-white/10 bg-slate-900/40 backdrop-blur-md overflow-hidden shadow-2xl">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-slate-900/60 border-b border-white/10">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-transparent border-none">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-slate-300 font-medium py-4">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -97,9 +97,10 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="hover:bg-slate-800/50 border-white/5 transition-colors duration-200"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-slate-300 py-4">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -112,7 +113,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-slate-400"
                 >
                   No hay resultados.
                 </TableCell>
@@ -127,6 +128,7 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white transition-all"
         >
           Anterior
         </Button>
@@ -135,6 +137,7 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white transition-all"
         >
           Siguiente
         </Button>
