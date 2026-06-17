@@ -47,8 +47,12 @@ export const AssessmentView = ({
     }
   }
 
-  // If student already has a score >= 80, it's approved
-  const isApproved = !!(studentAssessment && studentAssessment.score !== null && studentAssessment.score >= 80);
+  // If student already has a score >= 3 (scale 1-5) or >= 60 (legacy scale 1-100), it's approved
+  const isApproved = !!(
+    studentAssessment &&
+    studentAssessment.score !== null &&
+    (studentAssessment.score >= 3 || (studentAssessment.score > 5 && studentAssessment.score >= 60))
+  );
 
   return (
     <div className="mt-8 glass-card border-white/10 rounded-2xl p-6 relative overflow-hidden group">
@@ -74,29 +78,54 @@ export const AssessmentView = ({
           <p className="text-slate-200 leading-relaxed whitespace-pre-wrap">{assessment.prompt}</p>
         </div>
 
-        {studentAssessment && studentAssessment.score !== null && (
-          <div className={`p-5 rounded-xl border ${isApproved ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-amber-500/10 border-amber-500/30'}`}>
-            <div className="flex items-center gap-x-3 mb-3">
-              {isApproved ? (
-                <CheckCircle2 className="h-8 w-8 text-emerald-400" />
-              ) : (
-                <Sparkles className="h-8 w-8 text-amber-400" />
-              )}
-              <div>
-                <h4 className={`text-lg font-bold ${isApproved ? 'text-emerald-400' : 'text-amber-400'}`}>
-                  Nota: {studentAssessment.score}/100
-                </h4>
-                <p className={`text-sm ${isApproved ? 'text-emerald-300' : 'text-amber-300'}`}>
-                  {isApproved ? '¡Aprobado! Has superado esta evaluación.' : 'Puedes mejorar tu respuesta y volver a intentarlo.'}
-                </p>
+        {studentAssessment && studentAssessment.score !== null && (() => {
+          const displayScore = studentAssessment.score > 5 ? Math.round(studentAssessment.score / 20) : studentAssessment.score;
+          const isGood = displayScore >= 4;
+          const isFair = displayScore === 3;
+          const isPoor = displayScore <= 2;
+          
+          let cardBgBorder = 'bg-emerald-500/10 border-emerald-500/30';
+          let textColor = 'text-emerald-400';
+          let textMutedColor = 'text-emerald-300';
+          
+          if (isFair) {
+            cardBgBorder = 'bg-amber-500/10 border-amber-500/30';
+            textColor = 'text-amber-400';
+            textMutedColor = 'text-amber-300';
+          } else if (isPoor) {
+            cardBgBorder = 'bg-rose-500/10 border-rose-500/30';
+            textColor = 'text-rose-400';
+            textMutedColor = 'text-rose-300';
+          }
+
+          return (
+            <div className={`p-5 rounded-xl border ${cardBgBorder}`}>
+              <div className="flex items-center gap-x-3 mb-3">
+                {isGood ? (
+                  <CheckCircle2 className="h-8 w-8 text-emerald-400" />
+                ) : isFair ? (
+                  <Sparkles className="h-8 w-8 text-amber-400" />
+                ) : (
+                  <Sparkles className="h-8 w-8 text-rose-400" />
+                )}
+                <div>
+                  <h4 className={`text-lg font-bold ${textColor}`}>
+                    Nota: {displayScore}/5
+                  </h4>
+                  <p className={`text-sm ${textMutedColor}`}>
+                    {displayScore >= 3 
+                      ? '¡Aprobado! Has superado esta evaluación.' 
+                      : 'Puedes mejorar tu respuesta y volver a intentarlo.'}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <h5 className="text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">Feedback del Profesor Virtual:</h5>
+                <p className="text-slate-200 text-sm whitespace-pre-wrap">{studentAssessment.feedback}</p>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <h5 className="text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">Feedback del Profesor Virtual:</h5>
-              <p className="text-slate-200 text-sm whitespace-pre-wrap">{studentAssessment.feedback}</p>
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         <div className="space-y-4">
           <h3 className="text-sm font-semibold text-emerald-400 uppercase tracking-wider">Tu Respuesta:</h3>
