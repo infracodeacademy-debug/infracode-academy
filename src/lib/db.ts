@@ -10,13 +10,29 @@ declare global {
 }
 
 const getPrisma = () => {
+  if (globalThis.prisma) return globalThis.prisma;
+  
   const rawUrl = process.env.DATABASE_URL || "";
-  const connectionString = rawUrl.replace(/^["']|["']$/g, '');
+  const connectionString = rawUrl.trim().replace(/^["']|["']$/g, '');
+  
   const pool = new Pool({ connectionString });
   const adapter = new PrismaNeon(pool as any);
-  return new PrismaClient({ adapter });
+  
+  const client = new PrismaClient({ adapter });
+  if (process.env.NODE_ENV !== "production") {
+    globalThis.prisma = client;
+  }
+  return client;
 };
 
-export const db = globalThis.prisma || getPrisma();
-
-if (process.env.NODE_ENV !== "production") globalThis.prisma = db;
+// Use a Proxy so we don't call getPrisma() until the first query!
+export const db = new Proxy({} as PrismaClient, {
+  get: (target, prop) => {
+    const client = getPrisma();
+    const value = (client as any)[prop];
+    if (typeof value === 'function') {
+      return value.bind(client);
+    }
+    return value;
+  }
+});
