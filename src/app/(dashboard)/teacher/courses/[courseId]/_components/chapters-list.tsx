@@ -75,10 +75,11 @@ export const ChaptersList = ({
                   <div
                     className={cn(
                       "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm dark:bg-slate-800 dark:border-slate-800 dark:text-slate-300",
-                      chapter.isPublished && "bg-sky-100 border-sky-200 text-sky-700 dark:bg-indigo-900/50 dark:border-indigo-800 dark:text-indigo-300"
+                      chapter.isPublished && "bg-sky-100 border-sky-200 text-sky-700 dark:bg-sky-900/50 dark:border-sky-800 dark:text-sky-300"
                     )}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
+                    style={provided.draggableProps.style as React.CSSProperties}
                   >
                     <div
                       className={cn(

@@ -43,9 +43,9 @@ export const PriceForm = ({
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
-      price: initialData?.price || undefined
+      price: initialData?.price || undefined,
     },
   });
 
