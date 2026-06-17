@@ -48,7 +48,7 @@ export const AssessmentView = ({
   }
 
   // If student already has a score >= 80, it's approved
-  const isApproved = studentAssessment && studentAssessment.score !== null && studentAssessment.score >= 80;
+  const isApproved = !!(studentAssessment && studentAssessment.score !== null && studentAssessment.score >= 80);
 
   return (
     <div className="mt-8 glass-card border-white/10 rounded-2xl p-6 relative overflow-hidden group">

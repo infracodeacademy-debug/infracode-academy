@@ -12,11 +12,13 @@ import { Button } from "@/components/ui/button";
 interface CertificateButtonProps {
   courseName: string;
   studentName: string;
+  isLocked?: boolean;
 }
 
 export const CertificateButton = ({
   courseName,
-  studentName
+  studentName,
+  isLocked = false,
 }: CertificateButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
 

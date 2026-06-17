@@ -32,6 +32,8 @@ const ChapterIdPage = async (props: {
     userProgress,
     purchase,
     attachments,
+    openAssessment,
+    studentAssessment,
   } = await getChapter({
     userId,
     chapterId: params.chapterId,
@@ -141,7 +143,6 @@ const ChapterIdPage = async (props: {
                 </div>
               </div>
             </>
-          )}
           )}
         </div>
         
