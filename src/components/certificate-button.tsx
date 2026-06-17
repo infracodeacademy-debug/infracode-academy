@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Download, Loader2, Lock } from "lucide-react";
-import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -25,77 +24,145 @@ export const CertificateButton = ({
   const generateCertificate = async () => {
     try {
       setIsGenerating(true);
-      
-      // We create a temporary hidden div with the certificate design
-      const certContainer = document.createElement("div");
-      certContainer.style.position = "absolute";
-      certContainer.style.left = "-9999px";
-      certContainer.style.top = "0";
-      certContainer.style.width = "1123px"; // A4 landscape width
-      certContainer.style.height = "794px"; // A4 landscape height
-      certContainer.style.backgroundColor = "#0f172a";
-      certContainer.style.display = "flex";
-      certContainer.style.flexDirection = "column";
-      certContainer.style.justifyContent = "center";
-      certContainer.style.alignItems = "center";
-      certContainer.style.padding = "40px";
-      certContainer.style.fontFamily = "sans-serif";
-      certContainer.style.color = "white";
-      
-      const date = format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: es });
 
-      certContainer.innerHTML = `
-        <div style="border: 4px solid #8b5cf6; padding: 40px; border-radius: 20px; width: 100%; height: 100%; box-sizing: border-box; text-align: center; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 50%); pointer-events: none;"></div>
-          
-          <h1 style="font-size: 64px; color: #a78bfa; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 4px;">Certificado de Finalización</h1>
-          
-          <p style="font-size: 24px; color: #cbd5e1; margin-bottom: 40px;">Este certificado se otorga con gran orgullo a:</p>
-          
-          <h2 style="font-size: 56px; color: #ffffff; margin-bottom: 40px; border-bottom: 2px solid #8b5cf6; display: inline-block; padding-bottom: 10px;">${studentName}</h2>
-          
-          <p style="font-size: 24px; color: #cbd5e1; margin-bottom: 40px;">Por haber completado exitosamente y con excelencia el curso:</p>
-          
-          <h3 style="font-size: 40px; color: #e2e8f0; margin-bottom: 60px;">${courseName}</h3>
-          
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 80%; margin: 0 auto; margin-top: auto; padding-top: 40px;">
-            <div style="text-align: center;">
-              <div style="border-bottom: 1px solid #94a3b8; width: 200px; margin-bottom: 10px;"></div>
-              <p style="color: #94a3b8; font-size: 18px;">${date}</p>
-              <p style="color: #64748b; font-size: 14px;">Fecha de emisión</p>
-            </div>
-            
-            <div style="text-align: center;">
-              <div style="color: #8b5cf6; font-size: 32px; font-weight: bold; font-style: italic; margin-bottom: 10px;">Master Teacher</div>
-              <div style="border-bottom: 1px solid #94a3b8; width: 200px; margin-bottom: 10px;"></div>
-              <p style="color: #64748b; font-size: 14px;">Instructor Principal</p>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.body.appendChild(certContainer);
-
-      const canvas = await html2canvas(certContainer, {
-        scale: 2, 
-        backgroundColor: "#0f172a",
-        logging: false
-      });
-
-      document.body.removeChild(certContainer);
-
-      const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "landscape",
-        unit: "px",
-        format: [1123, 794]
+        unit: "mm",
+        format: "a4",
       });
 
-      pdf.addImage(imgData, "PNG", 0, 0, 1123, 794);
+      const pageWidth = pdf.internal.pageSize.getWidth();  // 297
+      const pageHeight = pdf.internal.pageSize.getHeight(); // 210
+      const centerX = pageWidth / 2;
+
+      const date = format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: es });
+
+      // === BACKGROUND ===
+      pdf.setFillColor(15, 23, 42); // slate-900
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
+
+      // === BORDER ===
+      pdf.setDrawColor(139, 92, 246); // violet-500
+      pdf.setLineWidth(1.5);
+      pdf.roundedRect(12, 12, pageWidth - 24, pageHeight - 24, 6, 6, "S");
+
+      // Inner decorative border
+      pdf.setDrawColor(139, 92, 246);
+      pdf.setLineWidth(0.3);
+      pdf.roundedRect(16, 16, pageWidth - 32, pageHeight - 32, 4, 4, "S");
+
+      // === DECORATIVE CORNERS ===
+      const cornerSize = 15;
+      pdf.setDrawColor(167, 139, 250); // violet-400
+      pdf.setLineWidth(0.8);
+      // Top-left
+      pdf.line(18, 22, 18, 22 + cornerSize);
+      pdf.line(18, 22, 18 + cornerSize, 22);
+      // Top-right
+      pdf.line(pageWidth - 18, 22, pageWidth - 18, 22 + cornerSize);
+      pdf.line(pageWidth - 18, 22, pageWidth - 18 - cornerSize, 22);
+      // Bottom-left
+      pdf.line(18, pageHeight - 22, 18, pageHeight - 22 - cornerSize);
+      pdf.line(18, pageHeight - 22, 18 + cornerSize, pageHeight - 22);
+      // Bottom-right
+      pdf.line(pageWidth - 18, pageHeight - 22, pageWidth - 18, pageHeight - 22 - cornerSize);
+      pdf.line(pageWidth - 18, pageHeight - 22, pageWidth - 18 - cornerSize, pageHeight - 22);
+
+      // === DECORATIVE LINE TOP ===
+      pdf.setDrawColor(139, 92, 246);
+      pdf.setLineWidth(0.5);
+      pdf.line(centerX - 60, 38, centerX + 60, 38);
+
+      // === LOGO TEXT ===
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(14);
+      pdf.setTextColor(100, 116, 139); // slate-500
+      pdf.text("INFRACODE ACADEMY", centerX, 34, { align: "center" });
+
+      // === TITLE ===
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(36);
+      pdf.setTextColor(167, 139, 250); // violet-400
+      pdf.text("CERTIFICADO", centerX, 56, { align: "center" });
+
+      pdf.setFontSize(16);
+      pdf.setTextColor(148, 163, 184); // slate-400
+      pdf.text("DE FINALIZACIÓN", centerX, 65, { align: "center" });
+
+      // === DECORATIVE LINE ===
+      pdf.setDrawColor(139, 92, 246);
+      pdf.setLineWidth(0.5);
+      pdf.line(centerX - 40, 70, centerX + 40, 70);
+
+      // === SUBTITLE ===
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(13);
+      pdf.setTextColor(203, 213, 225); // slate-300
+      pdf.text("Este certificado se otorga con orgullo a:", centerX, 82, { align: "center" });
+
+      // === STUDENT NAME ===
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(32);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text(studentName, centerX, 100, { align: "center" });
+
+      // Underline under the name
+      const nameWidth = pdf.getTextWidth(studentName);
+      pdf.setDrawColor(139, 92, 246);
+      pdf.setLineWidth(0.8);
+      pdf.line(centerX - nameWidth / 2, 103, centerX + nameWidth / 2, 103);
+
+      // === COURSE LABEL ===
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(13);
+      pdf.setTextColor(203, 213, 225);
+      pdf.text("Por haber completado exitosamente el curso:", centerX, 118, { align: "center" });
+
+      // === COURSE NAME ===
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(24);
+      pdf.setTextColor(226, 232, 240); // slate-200
+      pdf.text(courseName, centerX, 132, { align: "center" });
+
+      // === DECORATIVE STARS ===
+      pdf.setFontSize(18);
+      pdf.setTextColor(139, 92, 246);
+      pdf.text("★  ★  ★  ★  ★", centerX, 145, { align: "center" });
+
+      // === BOTTOM SECTION ===
+      // Date
+      pdf.setDrawColor(148, 163, 184);
+      pdf.setLineWidth(0.3);
+      pdf.line(45, 175, 115, 175);
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(11);
+      pdf.setTextColor(148, 163, 184);
+      pdf.text(date, 80, 181, { align: "center" });
+      pdf.setFontSize(9);
+      pdf.setTextColor(100, 116, 139);
+      pdf.text("Fecha de emisión", 80, 187, { align: "center" });
+
+      // Signature
+      pdf.setDrawColor(148, 163, 184);
+      pdf.line(pageWidth - 115, 175, pageWidth - 45, 175);
+      pdf.setFont("helvetica", "bolditalic");
+      pdf.setFontSize(16);
+      pdf.setTextColor(139, 92, 246);
+      pdf.text("InfraCode", pageWidth - 80, 172, { align: "center" });
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(11);
+      pdf.setTextColor(148, 163, 184);
+      pdf.text("Instructor Principal", pageWidth - 80, 181, { align: "center" });
+      pdf.setFontSize(9);
+      pdf.setTextColor(100, 116, 139);
+      pdf.text("InfraCode Academy", pageWidth - 80, 187, { align: "center" });
+
+      // === SAVE ===
       pdf.save(`Certificado_${courseName.replace(/\s+/g, '_')}.pdf`);
-      
+
     } catch (error) {
-      console.error(error);
+      console.error("Error generating certificate:", error);
+      alert("Error al generar el certificado. Intenta de nuevo.");
     } finally {
       setIsGenerating(false);
     }
