@@ -22,13 +22,13 @@ export const getChapter = async ({
       }
     });
 
-    const subscription = await db.stripeCustomerSubscription.findUnique({
-      where: { userId }
+    const subscription = await db.lemonSqueezySubscription.findUnique({
+      where: {
+        userId: userId,
+      }
     });
 
-    const hasActiveSubscription = subscription && 
-      subscription.stripeCurrentPeriodEnd && 
-      subscription.stripeCurrentPeriodEnd.getTime() > Date.now();
+    const hasActiveSubscription = !!(subscription?.lemonSqueezyCurrentPeriodEnd && subscription.lemonSqueezyCurrentPeriodEnd.getTime() > Date.now());
 
     const course = await db.course.findUnique({
       where: {

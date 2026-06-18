@@ -138,25 +138,25 @@ model Purchase {
   @@index([courseId])
 }
 
-model StripeCustomer {
-  id               String   @id @default(uuid())
-  userId           String   @unique // Clerk user ID
-  stripeCustomerId String   @unique
+model LemonSqueezyCustomer {
+  id                     String   @id @default(uuid())
+  userId                 String   @unique // Clerk user ID
+  lemonSqueezyCustomerId String   @unique
 
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 }
 
-model StripeCustomerSubscription {
-  id                     String    @id @default(uuid())
-  userId                 String    @unique // Clerk user ID
-  stripeCustomerId       String    @unique
-  stripeSubscriptionId   String?   @unique
-  stripePriceId          String?
-  stripeCurrentPeriodEnd DateTime?
+model LemonSqueezySubscription {
+  id                           String    @id @default(uuid())
+  userId                       String    @unique // Clerk user ID
+  lemonSqueezyCustomerId       String    @unique
+  lemonSqueezySubscriptionId   String?   @unique
+  lemonSqueezyVariantId        String?
+  lemonSqueezyCurrentPeriodEnd DateTime?
 
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
+  createdAt                    DateTime  @default(now())
+  updatedAt                    DateTime  @updatedAt
 }
 
 model Quiz {

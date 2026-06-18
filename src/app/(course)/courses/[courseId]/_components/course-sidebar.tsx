@@ -38,13 +38,13 @@ export const CourseSidebar = async ({
     }
   });
 
-  const subscription = await db.stripeCustomerSubscription.findUnique({
+  const subscription = await db.lemonSqueezySubscription.findUnique({
     where: { userId }
   });
 
   const hasActiveSubscription = subscription && 
-    subscription.stripeCurrentPeriodEnd && 
-    subscription.stripeCurrentPeriodEnd.getTime() > Date.now();
+    subscription.lemonSqueezyCurrentPeriodEnd && 
+    subscription.lemonSqueezyCurrentPeriodEnd.getTime() > Date.now();
 
   const hasAccess = !!purchase || !!hasActiveSubscription;
 

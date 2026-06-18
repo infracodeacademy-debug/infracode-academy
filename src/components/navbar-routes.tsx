@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -25,15 +26,19 @@ interface NavbarRoutesProps {
   isTeacherRequested?: boolean;
   points?: number;
   streak?: number;
+  isSubscribed?: boolean;
 }
 
 export const NavbarRoutes = ({ 
   userRole, 
   isTeacherRequested,
   points = 0,
-  streak = 0
+  streak = 0,
+  isSubscribed = false
 }: NavbarRoutesProps) => {
   const pathname = usePathname();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isPlayerPage = pathname?.includes("/courses");
@@ -41,6 +46,28 @@ export const NavbarRoutes = ({
 
   const isTeacher = userRole === "TEACHER" || userRole === "ADMIN";
   const isAdmin = userRole === "ADMIN";
+
+  const onSubscribe = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post("/api/subscribe/checkout");
+      window.location.assign(response.data.url);
+    } catch {
+      toast.error("Error de conexión");
+      setIsLoading(false);
+    }
+  }
+
+  const onManageSubscription = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("/api/subscribe/portal");
+      window.location.assign(response.data.url);
+    } catch {
+      toast.error("Error al acceder al portal");
+      setIsLoading(false);
+    }
+  }
 
   const onRequestTeacher = async () => {
     try {
@@ -64,15 +91,38 @@ export const NavbarRoutes = ({
       ) : (
         <div className="flex gap-x-2 items-center">
           {userRole === "STUDENT" && (
-            <div className="hidden sm:flex items-center gap-x-3 mr-4 bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-full">
-              <div className="flex items-center text-amber-400 text-sm font-semibold">
-                <span className="mr-1">⭐</span> {points} pts
+            <>
+              <div className="hidden sm:flex items-center gap-x-3 mr-4 bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-full">
+                <div className="flex items-center text-amber-400 text-sm font-semibold">
+                  <span className="mr-1">⭐</span> {points} pts
+                </div>
+                <div className="w-[1px] h-4 bg-slate-700" />
+                <div className="flex items-center text-orange-400 text-sm font-semibold">
+                  <span className="mr-1">🔥</span> {streak}
+                </div>
               </div>
-              <div className="w-[1px] h-4 bg-slate-700" />
-              <div className="flex items-center text-orange-400 text-sm font-semibold">
-                <span className="mr-1">🔥</span> {streak}
-              </div>
-            </div>
+              
+              {isSubscribed ? (
+                <Button 
+                  onClick={onManageSubscription} 
+                  disabled={isLoading}
+                  size="sm" 
+                  variant="outline" 
+                  className="text-white border-slate-700 hover:bg-slate-800"
+                >
+                  Gestionar Plan
+                </Button>
+              ) : (
+                <Button 
+                  onClick={onSubscribe} 
+                  disabled={isLoading}
+                  size="sm" 
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold border-0 shadow-[0_0_15px_rgba(245,158,11,0.4)]"
+                >
+                  Actualizar a Pro
+                </Button>
+              )}
+            </>
           )}
           {isAdmin && (
             <Link href="/admin/analytics">

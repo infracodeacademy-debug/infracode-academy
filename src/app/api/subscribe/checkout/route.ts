@@ -5,47 +5,29 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { setupLemonSqueezy } from "@/lib/lemon-squeezy";
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ courseId: string }> }
-) {
+export async function POST(req: Request) {
   try {
     const { userId } = await auth();
     const user = await currentUser();
-    const { courseId } = await params;
 
     if (!userId || !user || !user.emailAddresses?.[0]?.emailAddress) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const course = await db.course.findUnique({
+    const subscription = await db.lemonSqueezySubscription.findUnique({
       where: {
-        id: courseId,
-        isPublished: true,
+        userId: userId,
       }
     });
 
-    if (!course) {
-      return new NextResponse("Not found", { status: 404 });
-    }
-
-    const purchase = await db.purchase.findUnique({
-      where: {
-        userId_courseId: {
-          userId,
-          courseId,
-        }
-      }
-    });
-
-    if (purchase) {
-      return new NextResponse("Already purchased", { status: 400 });
+    if (subscription && subscription.lemonSqueezyCurrentPeriodEnd && subscription.lemonSqueezyCurrentPeriodEnd.getTime() > Date.now()) {
+      return new NextResponse("Already Subscribed", { status: 400 });
     }
 
     setupLemonSqueezy();
 
     const storeId = process.env.LEMON_SQUEEZY_STORE_ID!;
-    const variantId = process.env.LEMON_SQUEEZY_COURSE_VARIANT_ID!; // A "pay what you want" variant for custom pricing
+    const variantId = process.env.LEMON_SQUEEZY_SAAS_VARIANT_ID!;
 
     if (!storeId || !variantId) {
       return new NextResponse("Lemon Squeezy not configured", { status: 500 });
@@ -63,17 +45,14 @@ export async function POST(
         checkoutData: {
           email: user.emailAddresses[0].emailAddress,
           custom: {
-            course_id: course.id,
             user_id: userId,
+            is_subscription: "true",
           },
         },
-        customPrice: Math.round(course.price! * 100), // En centavos
         productOptions: {
-          name: course.title,
-          description: course.description || "",
-          receiptButtonText: "Ir al curso",
-          receiptLinkUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/courses/${course.id}?success=1`,
-          redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/courses/${course.id}?success=1`,
+          redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard?success=1`,
+          receiptButtonText: "Ir al Dashboard",
+          receiptLinkUrl: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard?success=1`,
         }
       }
     );
@@ -85,7 +64,7 @@ export async function POST(
 
     return NextResponse.json({ url: checkout.data.attributes.url });
   } catch (error) {
-    console.log("[COURSE_ID_CHECKOUT]", error);
+    console.log("[SUBSCRIBE_CHECKOUT]", error);
     return new NextResponse("Internal Error", { status: 500 })
   }
 }

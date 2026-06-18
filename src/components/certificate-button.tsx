@@ -81,38 +81,47 @@ export const CertificateButton = ({
       pdf.setTextColor(79, 70, 229); // indigo-600
       pdf.text("ACADEMY", 25, 37);
 
+      // Helper for perfectly centering text with charSpace in jsPDF
+      const drawCenteredText = (text: string, y: number, charSpace: number = 0) => {
+        const shiftX = charSpace ? ((text.length - 1) * charSpace) / 2 : 0;
+        pdf.text(text, centerX - shiftX, y, { align: "center", charSpace: charSpace || undefined });
+      };
+
+      // === HEADER TEXT ===
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(12);
+      pdf.setTextColor(51, 65, 85); // slate-700
+      drawCenteredText("CERTIFICADO DE", 55, 4);
+
       // === TITLE ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(38);
+      pdf.setFontSize(44);
       pdf.setTextColor(49, 46, 129); // indigo-900
-      const title = "CERTIFICADO DE PARTICIPACIÓN";
-      const charSpaceTitle = 6;
-      const shiftXTitle = ((title.length - 1) * charSpaceTitle) / 2;
-      pdf.text(title, centerX - shiftXTitle, 75, { align: "center", charSpace: charSpaceTitle });
+      drawCenteredText("PARTICIPACIÓN", 75, 6);
 
       // === SUBTITLE ===
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(14);
       pdf.setTextColor(51, 65, 85); // slate-700
-      pdf.text("OTORGADO CON HONOR A:", centerX, 95, { align: "center", charSpace: 1 });
+      drawCenteredText("OTORGADO CON HONOR A:", 95, 1);
 
       // === STUDENT NAME ===
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(28);
       pdf.setTextColor(15, 23, 42); // slate-900
-      pdf.text(safeStudentName, centerX, 115, { align: "center" });
+      drawCenteredText(safeStudentName, 115, 0);
 
       // === COURSE LABEL ===
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(12);
       pdf.setTextColor(100, 116, 139); // slate-500
-      pdf.text("POR HABER APROBADO CON ÉXITO LA CERTIFICACIÓN:", centerX, 130, { align: "center" });
+      drawCenteredText("POR HABER APROBADO CON ÉXITO LA CERTIFICACIÓN:", 130, 0);
 
       // === COURSE NAME ===
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(20);
       pdf.setTextColor(15, 23, 42);
-      pdf.text(safeCourseName, centerX, 142, { align: "center" });
+      drawCenteredText(safeCourseName, 142, 0);
 
       // === BOTTOM SECTION ===
       const rightCenterX = pageWidth - 80;
