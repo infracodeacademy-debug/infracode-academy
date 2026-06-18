@@ -44,62 +44,62 @@ export const CertificateButton = ({
       pdf.setFillColor(250, 252, 255); // Very light blue/white
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-      // === DECORATIVE SHAPES (BIU Inspired) ===
+      // === DECORATIVE SHAPES (InfraCode Inspired - Purple/Indigo) ===
       
-      // Top Right Blue Accent
-      pdf.setFillColor(37, 99, 235); // blue-600
+      // Top Right Accent
+      pdf.setFillColor(124, 58, 237); // violet-600
       pdf.triangle(pageWidth - 60, 0, pageWidth, 0, pageWidth, 60, "F");
       
-      pdf.setFillColor(29, 78, 216); // blue-700
+      pdf.setFillColor(79, 70, 229); // indigo-600
       pdf.triangle(pageWidth - 90, 0, pageWidth, 0, pageWidth, 90, "F");
       
-      pdf.setFillColor(59, 130, 246); // blue-500
+      pdf.setFillColor(139, 92, 246); // violet-500
       pdf.triangle(pageWidth, 20, pageWidth, 120, pageWidth - 100, 20, "F");
 
-      // Bottom Left Blue Accent
-      pdf.setFillColor(30, 58, 138); // blue-900
+      // Bottom Left Accent
+      pdf.setFillColor(49, 46, 129); // indigo-900
       pdf.triangle(0, pageHeight - 100, 0, pageHeight, 100, pageHeight, "F");
       
-      pdf.setFillColor(29, 78, 216); // blue-700
+      pdf.setFillColor(67, 56, 202); // indigo-700
       pdf.triangle(0, pageHeight - 130, 0, pageHeight, 130, pageHeight, "F");
 
-      pdf.setFillColor(37, 99, 235); // blue-600
+      pdf.setFillColor(124, 58, 237); // violet-600
       pdf.triangle(0, pageHeight - 40, 0, pageHeight - 150, 110, pageHeight - 40, "F");
 
       // === LOGO TEXT ===
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(26);
-      pdf.setTextColor(30, 58, 138); // blue-900
+      pdf.setTextColor(49, 46, 129); // indigo-900
       pdf.text("InfraCode", 25, 30);
       
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(14);
-      pdf.setTextColor(30, 58, 138); // blue-900
+      pdf.setTextColor(79, 70, 229); // indigo-600
       pdf.text("ACADEMY", 25, 37);
 
       // === HEADER TEXT ===
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(12);
       pdf.setTextColor(51, 65, 85); // slate-700
-      pdf.text("PARTICIPATION", centerX, 55, { align: "center", charSpace: 4 });
+      pdf.text("CERTIFICADO DE", centerX, 55, { align: "center", charSpace: 4 });
 
-      // Teal lines
-      pdf.setDrawColor(20, 184, 166); // teal-500
+      // Purple lines
+      pdf.setDrawColor(139, 92, 246); // violet-500
       pdf.setLineWidth(1.5);
-      pdf.line(centerX - 80, 58, centerX - 10, 58); // Left teal line
-      pdf.line(centerX + 10, 58, centerX + 80, 58); // Right teal line
+      pdf.line(centerX - 80, 58, centerX - 10, 58); // Left line
+      pdf.line(centerX + 10, 58, centerX + 80, 58); // Right line
 
       // === TITLE ===
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(44);
-      pdf.setTextColor(30, 58, 138); // blue-900
-      pdf.text("CERTIFICATE", centerX, 75, { align: "center", charSpace: 8 });
+      pdf.setTextColor(49, 46, 129); // indigo-900
+      pdf.text("PARTICIPACIÓN", centerX, 75, { align: "center", charSpace: 6 });
 
       // === SUBTITLE ===
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(14);
       pdf.setTextColor(51, 65, 85); // slate-700
-      pdf.text("AWARDED WITH HONOR TO:", centerX, 95, { align: "center", charSpace: 1 });
+      pdf.text("OTORGADO CON HONOR A:", centerX, 95, { align: "center", charSpace: 1 });
 
       // === STUDENT NAME ===
       pdf.setFont("helvetica", "bold");
@@ -116,7 +116,7 @@ export const CertificateButton = ({
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(11);
       pdf.setTextColor(100, 116, 139); // slate-500
-      pdf.text("FOR HAVING PASSED THE CERTIFICATION:", 40, 130, { align: "left" });
+      pdf.text("POR HABER APROBADO CON ÉXITO LA CERTIFICACIÓN:", 40, 130, { align: "left" });
 
       // === COURSE NAME ===
       pdf.setFont("helvetica", "bold");
@@ -128,7 +128,7 @@ export const CertificateButton = ({
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(14);
       pdf.setTextColor(15, 23, 42);
-      pdf.text("Competence: Technology", 40, 150, { align: "left" });
+      pdf.text("Competencia: Tecnología e Informática", 40, 150, { align: "left" });
 
       // === BOTTOM SECTION ===
       // Signature Graphic (Simulated with cursive-like text for now)
@@ -144,12 +144,12 @@ export const CertificateButton = ({
       
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(11);
-      pdf.setTextColor(30, 58, 138); // blue-900
-      pdf.text("LUIS DIEGO FERNÁNDEZ", pageWidth - 100, 166, { align: "center" });
+      pdf.setTextColor(49, 46, 129); // indigo-900
+      pdf.text("LUIS DIEGO FERNÁNDEZ CHAVES", pageWidth - 100, 166, { align: "center" });
       
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(10);
-      pdf.setTextColor(30, 58, 138); // blue-900
+      pdf.setTextColor(79, 70, 229); // indigo-600
       pdf.text("DIRECTOR DE DESARROLLO ACADÉMICO", pageWidth - 100, 172, { align: "center" });
 
       // Date
@@ -164,13 +164,13 @@ export const CertificateButton = ({
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(10);
       pdf.setTextColor(100, 116, 139);
-      pdf.text("DATE", pageWidth - 100, 190, { align: "center", charSpace: 2 });
+      pdf.text("FECHA", pageWidth - 100, 190, { align: "center", charSpace: 2 });
 
       // Footer disclaimer
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(8);
       pdf.setTextColor(148, 163, 184);
-      const disclaimer = "This self-management virtual certificate is not intended to qualify its participants and graduates for employment. It is intended solely\nfor vocational development, personal and professional enrichment.";
+      const disclaimer = "Este certificado virtual autogestionado no tiene como objetivo la acreditación universitaria oficial para empleo.\nSu propósito exclusivo es el desarrollo vocacional, enriquecimiento personal y profesional.";
       pdf.text(disclaimer, pageWidth - 140, 198, { align: "left" });
 
       // Slogan
