@@ -8,6 +8,18 @@ import Link from "next/link";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 interface NavbarRoutesProps {
   userRole?: string;
   isTeacherRequested?: boolean;
@@ -59,9 +71,29 @@ export const NavbarRoutes = ({ userRole, isTeacherRequested }: NavbarRoutesProps
             </Link>
           )}
           {userRole === "STUDENT" && !isTeacherRequested && (
-            <Button onClick={onRequestTeacher} size="sm" variant="ghost" className="text-indigo-400 hover:text-indigo-300">
-              Solicitar ser Profesor
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" variant="ghost" className="text-indigo-400 hover:text-indigo-300">
+                  Solicitar ser Profesor
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-slate-900 border-slate-800 text-slate-200">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-white">¿Quieres convertirte en Profesor?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-slate-400">
+                    Al solicitar este rol, los administradores de la academia revisarán tu perfil. Si eres aceptado, podrás crear, publicar y vender tus propios cursos dentro de la plataforma.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-transparent border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
+                    Cancelar
+                  </AlertDialogCancel>
+                  <AlertDialogAction onClick={onRequestTeacher} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                    Enviar Solicitud
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
           {userRole === "STUDENT" && isTeacherRequested && (
             <Button disabled size="sm" variant="ghost" className="text-slate-500">
