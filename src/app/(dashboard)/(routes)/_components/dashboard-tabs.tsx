@@ -1,9 +1,10 @@
 "use client";
 
-import { CheckCircle, Clock } from "lucide-react";
+import { CheckCircle, Clock, LayoutList } from "lucide-react";
 import { CoursesList } from "@/components/courses-list";
 import { InfoCard } from "./info-card";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface DashboardTabsProps {
   completedCourses: any[];
@@ -14,7 +15,7 @@ export const DashboardTabs = ({
   completedCourses,
   coursesInProgress
 }: DashboardTabsProps) => {
-  const [activeTab, setActiveTab] = useState<"in-progress" | "completed">("in-progress");
+  const [activeTab, setActiveTab] = useState<"all" | "in-progress" | "completed">("all");
   
   return (
     <div className="space-y-4">
@@ -33,29 +34,52 @@ export const DashboardTabs = ({
       </div>
 
       <div className="w-full mt-6">
-        <div className="inline-flex w-fit items-center justify-center rounded-lg bg-slate-900 border border-slate-800 p-[3px] text-muted-foreground mb-4">
+        <div className="flex items-center gap-x-2 overflow-x-auto pb-2 mb-4">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={cn(
+              "py-2 px-4 text-sm font-medium border border-slate-200 rounded-full flex items-center gap-x-2 transition-all duration-300 dark:border-slate-800/80 dark:bg-slate-900/40 dark:backdrop-blur-sm dark:hover:border-indigo-500/50 hover:shadow-md active:scale-95",
+              activeTab === "all" && "border-indigo-500 bg-indigo-500/10 text-indigo-700 shadow-indigo-500/20 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500 shadow-inner"
+            )}
+            type="button"
+          >
+            <LayoutList size={18} className="drop-shadow-sm" />
+            <div className="truncate">Todos</div>
+          </button>
           <button
             onClick={() => setActiveTab("in-progress")}
-            className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
-              activeTab === "in-progress" 
-                ? "bg-slate-800 text-white shadow-sm" 
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-            }`}
+            className={cn(
+              "py-2 px-4 text-sm font-medium border border-slate-200 rounded-full flex items-center gap-x-2 transition-all duration-300 dark:border-slate-800/80 dark:bg-slate-900/40 dark:backdrop-blur-sm dark:hover:border-indigo-500/50 hover:shadow-md active:scale-95",
+              activeTab === "in-progress" && "border-indigo-500 bg-indigo-500/10 text-indigo-700 shadow-indigo-500/20 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500 shadow-inner"
+            )}
+            type="button"
           >
-            En Progreso
+            <Clock size={18} className="drop-shadow-sm" />
+            <div className="truncate">En Progreso</div>
           </button>
           <button
             onClick={() => setActiveTab("completed")}
-            className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
-              activeTab === "completed" 
-                ? "bg-slate-800 text-white shadow-sm" 
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-            }`}
+            className={cn(
+              "py-2 px-4 text-sm font-medium border border-slate-200 rounded-full flex items-center gap-x-2 transition-all duration-300 dark:border-slate-800/80 dark:bg-slate-900/40 dark:backdrop-blur-sm dark:hover:border-indigo-500/50 hover:shadow-md active:scale-95",
+              activeTab === "completed" && "border-indigo-500 bg-indigo-500/10 text-indigo-700 shadow-indigo-500/20 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500 shadow-inner"
+            )}
+            type="button"
           >
-            Completados
+            <CheckCircle size={18} className="drop-shadow-sm" />
+            <div className="truncate">Completados</div>
           </button>
         </div>
         
+        {activeTab === "all" && (
+          <div className="mt-2">
+            {[...coursesInProgress, ...completedCourses].length === 0 ? (
+              <div className="text-center text-slate-500 mt-10">No tienes cursos</div>
+            ) : (
+              <CoursesList items={[...coursesInProgress, ...completedCourses]} />
+            )}
+          </div>
+        )}
+
         {activeTab === "in-progress" && (
           <div className="mt-2">
             {coursesInProgress.length === 0 ? (
