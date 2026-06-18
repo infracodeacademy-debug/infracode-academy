@@ -8,13 +8,17 @@ import { es } from "date-fns/locale";
 
 import { Button } from "@/components/ui/button";
 
+import QRCode from 'qrcode';
+
 interface CertificateButtonProps {
+  courseId: string;
   courseName: string;
   studentName: string;
   isLocked?: boolean;
 }
 
 export const CertificateButton = ({
+  courseId,
   courseName,
   studentName,
   isLocked = false,
@@ -77,17 +81,14 @@ export const CertificateButton = ({
       pdf.setTextColor(79, 70, 229); // indigo-600
       pdf.text("ACADEMY", 25, 37);
 
-      // === HEADER TEXT ===
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(12);
-      pdf.setTextColor(51, 65, 85); // slate-700
-      pdf.text("CERTIFICADO DE", centerX, 55, { align: "center", charSpace: 4 });
-
       // === TITLE ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(44);
+      pdf.setFontSize(38);
       pdf.setTextColor(49, 46, 129); // indigo-900
-      pdf.text("PARTICIPACIÓN", centerX, 75, { align: "center", charSpace: 6 });
+      const title = "CERTIFICADO DE PARTICIPACIÓN";
+      const charSpaceTitle = 6;
+      const shiftXTitle = ((title.length - 1) * charSpaceTitle) / 2;
+      pdf.text(title, centerX - shiftXTitle, 75, { align: "center", charSpace: charSpaceTitle });
 
       // === SUBTITLE ===
       pdf.setFont("helvetica", "bold");
@@ -150,6 +151,24 @@ export const CertificateButton = ({
       pdf.setFontSize(10);
       pdf.setTextColor(100, 116, 139);
       pdf.text("FECHA", rightCenterX, 203, { align: "center", charSpace: 2 });
+
+      // === QR CODE ===
+      const verificationUrl = `${window.location.origin}/courses/${courseId}`;
+      const qrDataUrl = await QRCode.toDataURL(verificationUrl, {
+        width: 150,
+        margin: 1,
+        color: {
+          dark: '#312e81', // indigo-900
+          light: '#ffffff' // white
+        }
+      });
+      
+      // Bottom Left
+      pdf.addImage(qrDataUrl, 'PNG', 30, pageHeight - 55, 30, 30);
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(8);
+      pdf.setTextColor(100, 116, 139); // slate-500
+      pdf.text("Validar en LinkedIn", 45, pageHeight - 20, { align: "center" });
 
       // === SAVE ===
       pdf.save(`Certificado_${safeCourseName.replace(/\s+/g, '_')}.pdf`);

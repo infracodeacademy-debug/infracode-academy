@@ -23,9 +23,16 @@ import {
 interface NavbarRoutesProps {
   userRole?: string;
   isTeacherRequested?: boolean;
+  points?: number;
+  streak?: number;
 }
 
-export const NavbarRoutes = ({ userRole, isTeacherRequested }: NavbarRoutesProps) => {
+export const NavbarRoutes = ({ 
+  userRole, 
+  isTeacherRequested,
+  points = 0,
+  streak = 0
+}: NavbarRoutesProps) => {
   const pathname = usePathname();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
@@ -55,7 +62,18 @@ export const NavbarRoutes = ({ userRole, isTeacherRequested }: NavbarRoutesProps
           </Button>
         </Link>
       ) : (
-        <div className="flex gap-x-2">
+        <div className="flex gap-x-2 items-center">
+          {userRole === "STUDENT" && (
+            <div className="hidden sm:flex items-center gap-x-3 mr-4 bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-full">
+              <div className="flex items-center text-amber-400 text-sm font-semibold">
+                <span className="mr-1">⭐</span> {points} pts
+              </div>
+              <div className="w-[1px] h-4 bg-slate-700" />
+              <div className="flex items-center text-orange-400 text-sm font-semibold">
+                <span className="mr-1">🔥</span> {streak}
+              </div>
+            </div>
+          )}
           {isAdmin && (
             <Link href="/admin/analytics">
               <Button size="sm" variant="outline" className="text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10">

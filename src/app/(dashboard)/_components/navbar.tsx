@@ -13,6 +13,8 @@ export const Navbar = async () => {
       <NavbarRoutes 
         userRole={profile?.role} 
         isTeacherRequested={profile?.isTeacherRequested} 
+        points={profile?.points}
+        streak={profile?.streak}
       />
     </div>
   )

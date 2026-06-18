@@ -16,6 +16,16 @@ export async function PUT(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    // Check previous state
+    const previousProgress = await db.userProgress.findUnique({
+      where: {
+        userId_chapterId: {
+          userId,
+          chapterId: chapterId,
+        }
+      }
+    });
+
     const userProgress = await db.userProgress.upsert({
       where: {
         userId_chapterId: {
@@ -32,6 +42,17 @@ export async function PUT(
         isCompleted,
       }
     });
+
+    // Gamification: Award 10 points for completing a chapter (only if it wasn't already completed)
+    if (isCompleted && !previousProgress?.isCompleted) {
+      await db.userProfile.update({
+        where: { userId },
+        data: {
+          points: { increment: 10 },
+          lastActivity: new Date()
+        }
+      }).catch(() => null);
+    }
 
     return NextResponse.json(userProgress);
   } catch (error) {

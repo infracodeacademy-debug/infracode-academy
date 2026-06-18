@@ -22,6 +22,14 @@ export const getChapter = async ({
       }
     });
 
+    const subscription = await db.stripeCustomerSubscription.findUnique({
+      where: { userId }
+    });
+
+    const hasActiveSubscription = subscription && 
+      subscription.stripeCurrentPeriodEnd && 
+      subscription.stripeCurrentPeriodEnd.getTime() > Date.now();
+
     const course = await db.course.findUnique({
       where: {
         isPublished: true,
@@ -90,7 +98,9 @@ export const getChapter = async ({
     let openAssessment = null;
     let studentAssessment = null;
 
-    if (purchase || chapter.isFree) {
+    const hasAccess = !!purchase || chapter.isFree || !!hasActiveSubscription;
+
+    if (hasAccess) {
       attachments = await db.attachment.findMany({
         where: {
           courseId: courseId
@@ -146,6 +156,7 @@ export const getChapter = async ({
       purchase,
       openAssessment,
       studentAssessment,
+      hasActiveSubscription,
     };
   } catch (error) {
     console.log("[GET_CHAPTER]", error);

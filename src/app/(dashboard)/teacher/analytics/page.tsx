@@ -17,6 +17,8 @@ const AnalyticsPage = async () => {
     data,
     totalRevenue,
     totalSales,
+    activeStudents,
+    dropOffData
   } = await getAnalytics(userId);
 
   return ( 
@@ -31,7 +33,7 @@ const AnalyticsPage = async () => {
           <p className="text-slate-400 mt-2">Mide el impacto y las ventas de tus cursos</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <DataCard
             label="Ingresos Totales"
             value={totalRevenue}
@@ -41,11 +43,36 @@ const AnalyticsPage = async () => {
             label="Ventas Totales"
             value={totalSales}
           />
+          <DataCard
+            label="Estudiantes Activos (30 días)"
+            value={activeStudents}
+          />
         </div>
         
-        <Chart
-          data={data}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Chart
+            data={data}
+          />
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Tasa de Abandono por Capítulo</h2>
+            <div className="space-y-4">
+              {dropOffData.length === 0 ? (
+                <p className="text-slate-400 text-sm">No hay datos de abandono suficientes.</p>
+              ) : (
+                dropOffData.map((dropoff, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-300 truncate max-w-[200px]">
+                      {dropoff.name}
+                    </span>
+                    <span className="text-rose-400 font-bold bg-rose-400/10 px-3 py-1 rounded-full text-xs">
+                      {dropoff.total} estancados
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
    );

@@ -41,10 +41,51 @@ export const getAnalytics = async (userId: string) => {
     const totalRevenue = data.reduce((acc, curr) => acc + curr.total, 0);
     const totalSales = purchases.length;
 
+    // Active Students
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const activeProgress = await db.userProgress.findMany({
+      where: {
+        updatedAt: { gte: thirtyDaysAgo },
+        chapter: { course: { userId: userId } }
+      },
+      select: { userId: true },
+      distinct: ['userId']
+    });
+    const activeStudents = activeProgress.length;
+
+    // Drop-off data (Chapters where users are stuck)
+    const inProgressChapters = await db.userProgress.groupBy({
+      by: ['chapterId'],
+      where: {
+        isCompleted: false,
+        chapter: { course: { userId: userId } }
+      },
+      _count: {
+        userId: true
+      }
+    });
+
+    const chapters = await db.chapter.findMany({
+      where: { course: { userId: userId } },
+      select: { id: true, title: true }
+    });
+
+    const dropOffData = inProgressChapters.map(ip => {
+       const chapter = chapters.find(c => c.id === ip.chapterId);
+       return {
+          name: chapter?.title || 'Capítulo',
+          total: ip._count.userId
+       }
+    }).sort((a,b) => b.total - a.total).slice(0, 5);
+
     return {
       data,
       totalRevenue,
       totalSales,
+      activeStudents,
+      dropOffData
     }
   } catch (error) {
     console.log("[GET_ANALYTICS]", error);
@@ -52,6 +93,8 @@ export const getAnalytics = async (userId: string) => {
       data: [],
       totalRevenue: 0,
       totalSales: 0,
+      activeStudents: 0,
+      dropOffData: []
     }
   }
 }

@@ -38,6 +38,16 @@ export const CourseSidebar = async ({
     }
   });
 
+  const subscription = await db.stripeCustomerSubscription.findUnique({
+    where: { userId }
+  });
+
+  const hasActiveSubscription = subscription && 
+    subscription.stripeCurrentPeriodEnd && 
+    subscription.stripeCurrentPeriodEnd.getTime() > Date.now();
+
+  const hasAccess = !!purchase || !!hasActiveSubscription;
+
   const grade = purchase ? await getCourseGrade(userId, course.id) : null;
   const instructorProfile = await db.userProfile.findUnique({ where: { userId: course.userId } });
 
@@ -53,7 +63,7 @@ export const CourseSidebar = async ({
         <p className="text-xs text-slate-400 relative z-10 mt-1 font-medium flex items-center">
           <span className="text-brand-primary mr-1">Por</span> {instructorProfile?.name || "InfraCode Academy"}
         </p>
-        {purchase && (
+        {hasAccess && (
           <div className="mt-10 relative z-10 flex flex-col gap-y-4">
             <CourseProgress
               variant="success"
@@ -70,6 +80,7 @@ export const CourseSidebar = async ({
               </div>
             )}
             <CertificateButton 
+              courseId={course.id}
               courseName={course.title}
               studentName={user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : "Estudiante Destacado"}
               isLocked={progressCount !== 100}
@@ -85,7 +96,7 @@ export const CourseSidebar = async ({
             label={chapter.title}
             isCompleted={!!chapter.userProgress?.[0]?.isCompleted}
             courseId={course.id}
-            isLocked={!chapter.isFree && !purchase}
+            isLocked={!chapter.isFree && !hasAccess}
           />
         ))}
       </div>
