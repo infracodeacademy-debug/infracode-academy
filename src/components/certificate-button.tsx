@@ -83,12 +83,6 @@ export const CertificateButton = ({
       pdf.setTextColor(51, 65, 85); // slate-700
       pdf.text("CERTIFICADO DE", centerX, 55, { align: "center", charSpace: 4 });
 
-      // Purple lines
-      pdf.setDrawColor(139, 92, 246); // violet-500
-      pdf.setLineWidth(1.5);
-      pdf.line(centerX - 80, 58, centerX - 10, 58); // Left line
-      pdf.line(centerX + 10, 58, centerX + 80, 58); // Right line
-
       // === TITLE ===
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(44);
@@ -103,81 +97,57 @@ export const CertificateButton = ({
 
       // === STUDENT NAME ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(24);
+      pdf.setFontSize(28);
       pdf.setTextColor(15, 23, 42); // slate-900
-      pdf.text(safeStudentName, 40, 115, { align: "left" });
-      
-      // Line under name
-      pdf.setDrawColor(148, 163, 184); // slate-400
-      pdf.setLineWidth(0.5);
-      pdf.line(40, 120, pageWidth - 40, 120);
+      pdf.text(safeStudentName, centerX, 115, { align: "center" });
 
       // === COURSE LABEL ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(11);
+      pdf.setFontSize(12);
       pdf.setTextColor(100, 116, 139); // slate-500
-      pdf.text("POR HABER APROBADO CON ÉXITO LA CERTIFICACIÓN:", 40, 130, { align: "left" });
+      pdf.text("POR HABER APROBADO CON ÉXITO LA CERTIFICACIÓN:", centerX, 130, { align: "center" });
 
       // === COURSE NAME ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(16);
+      pdf.setFontSize(20);
       pdf.setTextColor(15, 23, 42);
-      pdf.text(safeCourseName, 40, 140, { align: "left" });
-
-      // === COMPETENCE ===
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(14);
-      pdf.setTextColor(15, 23, 42);
-      pdf.text("Competencia: Tecnología e Informática", 40, 150, { align: "left" });
+      pdf.text(safeCourseName, centerX, 142, { align: "center" });
 
       // === BOTTOM SECTION ===
       // Signature Graphic (Simulated with cursive-like text for now)
       pdf.setFont("times", "italic");
       pdf.setFontSize(32);
       pdf.setTextColor(100, 116, 139); // slate-500
-      pdf.text("InfraCode Academy", pageWidth - 100, 155, { align: "center" });
+      pdf.text("InfraCode Academy", centerX, 165, { align: "center" });
 
       // Signature Details
       pdf.setDrawColor(148, 163, 184);
       pdf.setLineWidth(0.5);
-      pdf.line(pageWidth - 160, 160, pageWidth - 40, 160);
+      pdf.line(centerX - 60, 170, centerX + 60, 170);
       
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(11);
       pdf.setTextColor(49, 46, 129); // indigo-900
-      pdf.text("LUIS DIEGO FERNÁNDEZ CHAVES", pageWidth - 100, 166, { align: "center" });
+      pdf.text("LUIS DIEGO FERNÁNDEZ CHAVES", centerX, 176, { align: "center" });
       
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(10);
       pdf.setTextColor(79, 70, 229); // indigo-600
-      pdf.text("DIRECTOR DE DESARROLLO ACADÉMICO", pageWidth - 100, 172, { align: "center" });
+      pdf.text("DIRECTOR DE DESARROLLO ACADÉMICO", centerX, 182, { align: "center" });
 
       // Date
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(12);
       pdf.setTextColor(15, 23, 42);
-      pdf.text(date, pageWidth - 100, 182, { align: "center" });
+      pdf.text(date, centerX, 195, { align: "center" });
       
       pdf.setDrawColor(148, 163, 184);
-      pdf.line(pageWidth - 140, 185, pageWidth - 60, 185);
+      pdf.line(centerX - 20, 198, centerX + 20, 198);
       
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(10);
       pdf.setTextColor(100, 116, 139);
-      pdf.text("FECHA", pageWidth - 100, 190, { align: "center", charSpace: 2 });
-
-      // Footer disclaimer
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(8);
-      pdf.setTextColor(148, 163, 184);
-      const disclaimer = "Este certificado virtual autogestionado no tiene como objetivo la acreditación universitaria oficial para empleo.\nSu propósito exclusivo es el desarrollo vocacional, enriquecimiento personal y profesional.";
-      pdf.text(disclaimer, pageWidth - 140, 198, { align: "left" });
-
-      // Slogan
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(16);
-      pdf.setTextColor(255, 255, 255);
-      pdf.text("Be Limitless. Be Successful.", 15, pageHeight - 15);
+      pdf.text("FECHA", centerX, 203, { align: "center", charSpace: 2 });
 
       // === SAVE ===
       pdf.save(`Certificado_${safeCourseName.replace(/\s+/g, '_')}.pdf`);
