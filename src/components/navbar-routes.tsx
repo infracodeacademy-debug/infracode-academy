@@ -72,11 +72,13 @@ export const NavbarRoutes = ({ userRole, isTeacherRequested }: NavbarRoutesProps
           )}
           {userRole === "STUDENT" && !isTeacherRequested && (
             <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button size="sm" variant="ghost" className="text-indigo-400 hover:text-indigo-300">
-                  Solicitar ser Profesor
-                </Button>
-              </AlertDialogTrigger>
+              <AlertDialogTrigger 
+                render={
+                  <Button size="sm" variant="ghost" className="text-indigo-400 hover:text-indigo-300">
+                    Solicitar ser Profesor
+                  </Button>
+                }
+              />
               <AlertDialogContent className="bg-slate-900 border-slate-800 text-slate-200">
                 <AlertDialogHeader>
                   <AlertDialogTitle className="text-white">¿Quieres convertirte en Profesor?</AlertDialogTitle>
