@@ -32,6 +32,9 @@ export const Categories = ({
 }: CategoriesProps) => {
   return (
     <div className="flex items-center gap-x-2 overflow-x-auto pb-2">
+      <CategoryItem
+        label="Todos"
+      />
       {items.map((item) => (
         <CategoryItem
           key={item.id}

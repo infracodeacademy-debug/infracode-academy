@@ -19,20 +19,6 @@ export const DashboardTabs = ({
   
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <InfoCard
-          icon={Clock}
-          label="En Progreso"
-          numberOfItems={coursesInProgress.length}
-        />
-        <InfoCard
-          icon={CheckCircle}
-          label="Completados"
-          numberOfItems={completedCourses.length}
-          variant="success"
-        />
-      </div>
-
       <div className="w-full mt-6">
         <div className="flex items-center gap-x-2 overflow-x-auto pb-2 mb-4">
           <button

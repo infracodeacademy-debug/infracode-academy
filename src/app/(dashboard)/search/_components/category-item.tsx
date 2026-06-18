@@ -28,7 +28,9 @@ export const CategoryItem = ({
   const currentCategoryId = searchParams.get("categoryId");
   const currentTitle = searchParams.get("title");
 
-  const isSelected = currentCategoryId === value;
+  const isSelected = value === undefined 
+    ? currentCategoryId === null 
+    : currentCategoryId === value;
 
   const onClick = () => {
     const url = qs.stringifyUrl({
