@@ -2,21 +2,20 @@
 
 import { CheckCircle, Clock } from "lucide-react";
 import { CoursesList } from "@/components/courses-list";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InfoCard } from "./info-card";
+import { useState } from "react";
 
 interface DashboardTabsProps {
   completedCourses: any[];
   coursesInProgress: any[];
 }
 
-import { useState } from "react";
-
 export const DashboardTabs = ({
   completedCourses,
   coursesInProgress
 }: DashboardTabsProps) => {
-  const [activeTab, setActiveTab] = useState("in-progress");
+  const [activeTab, setActiveTab] = useState<"in-progress" | "completed">("in-progress");
+  
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -33,30 +32,50 @@ export const DashboardTabs = ({
         />
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
-        <TabsList className="bg-slate-900 border-slate-800 border mb-4">
-          <TabsTrigger value="in-progress" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white">
+      <div className="w-full mt-6">
+        <div className="inline-flex w-fit items-center justify-center rounded-lg bg-slate-900 border border-slate-800 p-[3px] text-muted-foreground mb-4">
+          <button
+            onClick={() => setActiveTab("in-progress")}
+            className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
+              activeTab === "in-progress" 
+                ? "bg-slate-800 text-white shadow-sm" 
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+            }`}
+          >
             En Progreso
-          </TabsTrigger>
-          <TabsTrigger value="completed" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white">
+          </button>
+          <button
+            onClick={() => setActiveTab("completed")}
+            className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
+              activeTab === "completed" 
+                ? "bg-slate-800 text-white shadow-sm" 
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+            }`}
+          >
             Completados
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="in-progress" className={activeTab === "in-progress" ? "block" : "hidden"}>
-          {coursesInProgress.length === 0 ? (
-            <div className="text-center text-slate-500 mt-10">No tienes cursos en progreso</div>
-          ) : (
-            <CoursesList items={coursesInProgress} />
-          )}
-        </TabsContent>
-        <TabsContent value="completed" className={activeTab === "completed" ? "block" : "hidden"}>
-          {completedCourses.length === 0 ? (
-            <div className="text-center text-slate-500 mt-10">Aún no has completado ningún curso</div>
-          ) : (
-            <CoursesList items={completedCourses} />
-          )}
-        </TabsContent>
-      </Tabs>
+          </button>
+        </div>
+        
+        {activeTab === "in-progress" && (
+          <div className="mt-2">
+            {coursesInProgress.length === 0 ? (
+              <div className="text-center text-slate-500 mt-10">No tienes cursos en progreso</div>
+            ) : (
+              <CoursesList items={coursesInProgress} />
+            )}
+          </div>
+        )}
+        
+        {activeTab === "completed" && (
+          <div className="mt-2">
+            {completedCourses.length === 0 ? (
+              <div className="text-center text-slate-500 mt-10">Aún no has completado ningún curso</div>
+            ) : (
+              <CoursesList items={completedCourses} />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
