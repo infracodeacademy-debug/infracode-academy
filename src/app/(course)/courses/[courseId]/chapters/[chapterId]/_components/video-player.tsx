@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 interface VideoPlayerProps {
   videoUrl: string;
+  playbackId?: string | null;
   courseId: string;
   chapterId: string;
   nextChapterId?: string;
@@ -18,9 +19,11 @@ interface VideoPlayerProps {
 };
 
 import axios from "axios";
+import MuxPlayer from "@mux/mux-player-react";
 
 export const VideoPlayer = ({
   videoUrl,
+  playbackId,
   courseId,
   chapterId,
   nextChapterId,
@@ -69,14 +72,24 @@ export const VideoPlayer = ({
         </div>
       )}
       {!isLocked && (
-        <video
-          className="w-full h-full object-cover relative z-0"
-          controls
-          controlsList="nodownload"
-          onCanPlay={() => setIsReady(true)}
-          onEnded={onEnd}
-          src={videoUrl}
-        />
+        playbackId ? (
+          <MuxPlayer
+            title={title}
+            className="w-full h-full object-cover relative z-0"
+            onCanPlay={() => setIsReady(true)}
+            onEnded={onEnd}
+            playbackId={playbackId}
+          />
+        ) : (
+          <video
+            className="w-full h-full object-cover relative z-0"
+            controls
+            controlsList="nodownload"
+            onCanPlay={() => setIsReady(true)}
+            onEnded={onEnd}
+            src={videoUrl}
+          />
+        )
       )}
     </div>
   )

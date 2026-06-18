@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import Mux from "@mux/mux-node";
 import { db } from "@/lib/db";
 import { isTeacher } from "@/lib/teacher";
+
+const mux = new Mux({
+  tokenId: process.env.MUX_TOKEN_ID,
+  tokenSecret: process.env.MUX_TOKEN_SECRET,
+});
 
 export async function PATCH(
   req: Request,
@@ -36,6 +42,45 @@ export async function PATCH(
         ...values,
       }
     });
+
+    if (values.videoUrl) {
+      const existingMuxData = await db.muxData.findFirst({
+        where: {
+          chapterId: chapterId,
+        }
+      });
+
+      if (existingMuxData) {
+        try {
+          await mux.video.assets.delete(existingMuxData.assetId);
+        } catch (error) {
+          console.error("Error deleting mux asset", error);
+        }
+        await db.muxData.delete({
+          where: {
+            id: existingMuxData.id,
+          }
+        });
+      }
+
+      try {
+        const asset = await mux.video.assets.create({
+          input: [{ url: values.videoUrl }],
+          playback_policy: ["public"],
+          test: false,
+        });
+
+        await db.muxData.create({
+          data: {
+            chapterId: chapterId,
+            assetId: asset.id,
+            playbackId: asset.playback_ids?.[0]?.id,
+          }
+        });
+      } catch (error) {
+        console.error("Error creating mux asset", error);
+      }
+    }
 
     return NextResponse.json(chapter);
   } catch (error) {
@@ -78,7 +123,26 @@ export async function DELETE(
       return new NextResponse("Not Found", { status: 404 });
     }
 
-    // TODO: If we had videos in Mux, we should delete them here
+    if (chapter.videoUrl) {
+      const existingMuxData = await db.muxData.findFirst({
+        where: {
+          chapterId: chapterId,
+        }
+      });
+
+      if (existingMuxData) {
+        try {
+          await mux.video.assets.delete(existingMuxData.assetId);
+        } catch (error) {
+          console.error("Error deleting mux asset", error);
+        }
+        await db.muxData.delete({
+          where: {
+            id: existingMuxData.id,
+          }
+        });
+      }
+    }
     
     const deletedChapter = await db.chapter.delete({
       where: {

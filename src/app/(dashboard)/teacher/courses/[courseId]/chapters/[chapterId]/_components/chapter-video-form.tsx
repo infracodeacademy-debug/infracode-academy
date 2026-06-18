@@ -6,13 +6,14 @@ import { Pencil, PlusCircle, Video } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Chapter } from "@prisma/client";
+import { Chapter, MuxData } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { UploadDropzone } from "@/lib/uploadthing";
+import MuxPlayer from "@mux/mux-player-react";
 
 interface ChapterVideoFormProps {
-  initialData: Chapter;
+  initialData: Chapter & { muxData?: MuxData | null };
   courseId: string;
   chapterId: string;
 }
@@ -72,11 +73,18 @@ export const ChapterVideoForm = ({
           </div>
         ) : (
           <div className="relative aspect-video mt-2">
-            <video
-              className="w-full h-full rounded-md"
-              controls
-              src={initialData.videoUrl}
-            />
+            {!initialData.muxData?.playbackId ? (
+              <video
+                className="w-full h-full rounded-md"
+                controls
+                src={initialData.videoUrl}
+              />
+            ) : (
+              <MuxPlayer
+                className="w-full h-full rounded-md"
+                playbackId={initialData.muxData?.playbackId || ""}
+              />
+            )}
           </div>
         )
       )}

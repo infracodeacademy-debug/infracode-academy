@@ -39,6 +39,7 @@ const ChapterIdPage = async (props: {
         }
       },
       openAssessment: true,
+      muxData: true,
     }
   });
 

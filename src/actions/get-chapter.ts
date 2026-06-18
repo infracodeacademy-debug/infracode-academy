@@ -43,6 +43,7 @@ export const getChapter = async ({
         isPublished: true,
       },
       include: {
+        muxData: true,
         comments: {
           where: {
             parentId: null
