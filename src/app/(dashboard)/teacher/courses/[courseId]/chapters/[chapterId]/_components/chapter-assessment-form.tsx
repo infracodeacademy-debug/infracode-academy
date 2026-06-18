@@ -50,7 +50,7 @@ export const ChapterAssessmentForm = ({
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       prompt: initialData?.prompt || "",
       rubric: initialData?.rubric || "",
