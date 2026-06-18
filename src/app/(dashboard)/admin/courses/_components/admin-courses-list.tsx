@@ -29,6 +29,19 @@ export const AdminCoursesList = ({ courses }: AdminCoursesListProps) => {
     }
   }
 
+  const onUnapprove = async (courseId: string) => {
+    try {
+      setLoadingId(courseId);
+      await axios.patch(`/api/admin/courses/${courseId}/unapprove`);
+      toast.success("Curso desaprobado/archivado exitosamente");
+      window.location.reload();
+    } catch {
+      toast.error("Error al desaprobar el curso");
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
   return (
     <div className="bg-slate-900 border-slate-800 border rounded-md overflow-hidden">
       <div className="overflow-x-auto">
@@ -81,6 +94,17 @@ export const AdminCoursesList = ({ courses }: AdminCoursesListProps) => {
                       className="bg-emerald-600 hover:bg-emerald-700 text-white"
                     >
                       Aprobar
+                    </Button>
+                  )}
+                  {course.isApproved && (
+                    <Button 
+                      onClick={() => onUnapprove(course.id)}
+                      disabled={loadingId === course.id}
+                      size="sm" 
+                      variant="outline"
+                      className="text-rose-500 border-rose-500 hover:bg-rose-500/10 hover:text-rose-600"
+                    >
+                      Desaprobar / Archivar
                     </Button>
                   )}
                 </td>
