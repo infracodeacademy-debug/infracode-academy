@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/response";
+import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 
