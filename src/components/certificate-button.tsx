@@ -47,124 +47,137 @@ export const CertificateButton = ({
       // === DECORATIVE SHAPES (BIU Inspired) ===
       
       // Top Right Blue Accent
-      pdf.setFillColor(29, 78, 216); // blue-700
-      pdf.triangle(pageWidth - 80, 0, pageWidth, 0, pageWidth, 80, "F");
+      pdf.setFillColor(37, 99, 235); // blue-600
+      pdf.triangle(pageWidth - 60, 0, pageWidth, 0, pageWidth, 60, "F");
       
-      pdf.setFillColor(37, 99, 235); // blue-600 (lighter)
-      pdf.triangle(pageWidth - 110, 0, pageWidth, 0, pageWidth, 110, "F");
+      pdf.setFillColor(29, 78, 216); // blue-700
+      pdf.triangle(pageWidth - 90, 0, pageWidth, 0, pageWidth, 90, "F");
       
       pdf.setFillColor(59, 130, 246); // blue-500
-      pdf.triangle(pageWidth, 30, pageWidth, 140, pageWidth - 110, 30, "F");
+      pdf.triangle(pageWidth, 20, pageWidth, 120, pageWidth - 100, 20, "F");
 
       // Bottom Left Blue Accent
       pdf.setFillColor(30, 58, 138); // blue-900
-      pdf.triangle(0, pageHeight - 80, 0, pageHeight, 80, pageHeight, "F");
+      pdf.triangle(0, pageHeight - 100, 0, pageHeight, 100, pageHeight, "F");
       
-      pdf.setFillColor(37, 99, 235); // blue-600
-      pdf.triangle(0, pageHeight - 110, 0, pageHeight, 110, pageHeight, "F");
+      pdf.setFillColor(29, 78, 216); // blue-700
+      pdf.triangle(0, pageHeight - 130, 0, pageHeight, 130, pageHeight, "F");
 
-      pdf.setFillColor(59, 130, 246); // blue-500
-      pdf.triangle(0, pageHeight - 30, 0, pageHeight - 140, 110, pageHeight - 30, "F");
+      pdf.setFillColor(37, 99, 235); // blue-600
+      pdf.triangle(0, pageHeight - 40, 0, pageHeight - 150, 110, pageHeight - 40, "F");
 
       // === LOGO TEXT ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(22);
+      pdf.setFontSize(26);
       pdf.setTextColor(30, 58, 138); // blue-900
-      pdf.text("InfraCode", 25, 35);
+      pdf.text("InfraCode", 25, 30);
       
       pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(16);
-      pdf.setTextColor(71, 85, 105); // slate-600
-      pdf.text("ACADEMY", 25, 43);
+      pdf.setFontSize(14);
+      pdf.setTextColor(30, 58, 138); // blue-900
+      pdf.text("ACADEMY", 25, 37);
 
       // === HEADER TEXT ===
       pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(14);
-      pdf.setTextColor(71, 85, 105);
-      pdf.text("CERTIFICADO DE PARTICIPACIÓN", centerX, 65, { align: "center" });
+      pdf.setFontSize(12);
+      pdf.setTextColor(51, 65, 85); // slate-700
+      pdf.text("PARTICIPATION", centerX, 55, { align: "center", charSpace: 4 });
 
-      // Teal/Mint Line
+      // Teal lines
       pdf.setDrawColor(20, 184, 166); // teal-500
       pdf.setLineWidth(1.5);
-      pdf.line(centerX - 60, 68, centerX + 60, 68);
+      pdf.line(centerX - 80, 58, centerX - 10, 58); // Left teal line
+      pdf.line(centerX + 10, 58, centerX + 80, 58); // Right teal line
 
       // === TITLE ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(40);
-      pdf.setTextColor(15, 23, 42); // slate-900
-      pdf.text("CERTIFICADO", centerX, 85, { align: "center", charSpace: 2 });
+      pdf.setFontSize(44);
+      pdf.setTextColor(30, 58, 138); // blue-900
+      pdf.text("CERTIFICATE", centerX, 75, { align: "center", charSpace: 8 });
 
       // === SUBTITLE ===
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(12);
-      pdf.setTextColor(100, 116, 139);
-      pdf.text("OTORGADO CON HONOR A:", centerX, 100, { align: "center" });
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(14);
+      pdf.setTextColor(51, 65, 85); // slate-700
+      pdf.text("AWARDED WITH HONOR TO:", centerX, 95, { align: "center", charSpace: 1 });
 
       // === STUDENT NAME ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(28);
-      pdf.setTextColor(15, 23, 42);
-      pdf.text(safeStudentName, centerX, 115, { align: "center" });
+      pdf.setFontSize(24);
+      pdf.setTextColor(15, 23, 42); // slate-900
+      pdf.text(safeStudentName, 40, 115, { align: "left" });
       
       // Line under name
-      const nameWidth = pdf.getTextWidth(safeStudentName);
-      pdf.setDrawColor(203, 213, 225); // slate-300
+      pdf.setDrawColor(148, 163, 184); // slate-400
       pdf.setLineWidth(0.5);
-      pdf.line(centerX - nameWidth / 2 - 10, 118, centerX + nameWidth / 2 + 10, 118);
+      pdf.line(40, 120, pageWidth - 40, 120);
 
       // === COURSE LABEL ===
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(12);
-      pdf.setTextColor(100, 116, 139);
-      pdf.text("POR HABER APROBADO CON ÉXITO EL CURSO:", centerX, 130, { align: "center" });
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(11);
+      pdf.setTextColor(100, 116, 139); // slate-500
+      pdf.text("FOR HAVING PASSED THE CERTIFICATION:", 40, 130, { align: "left" });
 
       // === COURSE NAME ===
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(18);
+      pdf.setFontSize(16);
       pdf.setTextColor(15, 23, 42);
-      pdf.text(safeCourseName, centerX, 142, { align: "center" });
+      pdf.text(safeCourseName, 40, 140, { align: "left" });
+
+      // === COMPETENCE ===
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(14);
+      pdf.setTextColor(15, 23, 42);
+      pdf.text("Competence: Technology", 40, 150, { align: "left" });
 
       // === BOTTOM SECTION ===
+      // Signature Graphic (Simulated with cursive-like text for now)
+      pdf.setFont("times", "italic");
+      pdf.setFontSize(32);
+      pdf.setTextColor(100, 116, 139); // slate-500
+      pdf.text("InfraCode Academy", pageWidth - 100, 155, { align: "center" });
+
+      // Signature Details
+      pdf.setDrawColor(148, 163, 184);
+      pdf.setLineWidth(0.5);
+      pdf.line(pageWidth - 160, 160, pageWidth - 40, 160);
+      
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(11);
+      pdf.setTextColor(30, 58, 138); // blue-900
+      pdf.text("LUIS DIEGO FERNÁNDEZ", pageWidth - 100, 166, { align: "center" });
+      
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(10);
+      pdf.setTextColor(30, 58, 138); // blue-900
+      pdf.text("DIRECTOR DE DESARROLLO ACADÉMICO", pageWidth - 100, 172, { align: "center" });
+
       // Date
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(12);
       pdf.setTextColor(15, 23, 42);
-      pdf.text(date, 70, 180, { align: "center" });
+      pdf.text(date, pageWidth - 100, 182, { align: "center" });
       
-      pdf.setDrawColor(203, 213, 225);
-      pdf.setLineWidth(0.5);
-      pdf.line(40, 183, 100, 183);
+      pdf.setDrawColor(148, 163, 184);
+      pdf.line(pageWidth - 140, 185, pageWidth - 60, 185);
       
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(10);
       pdf.setTextColor(100, 116, 139);
-      pdf.text("FECHA", 70, 189, { align: "center" });
-
-      // Signature
-      pdf.setFont("helvetica", "italic");
-      pdf.setFontSize(16);
-      pdf.setTextColor(15, 23, 42);
-      pdf.text("Director Principal", pageWidth - 70, 178, { align: "center" });
-      
-      pdf.setDrawColor(203, 213, 225);
-      pdf.line(pageWidth - 100, 183, pageWidth - 40, 183);
-      
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(10);
-      pdf.setTextColor(15, 23, 42);
-      pdf.text("DIRECTOR DE DESARROLLO ACADÉMICO", pageWidth - 70, 189, { align: "center" });
+      pdf.text("DATE", pageWidth - 100, 190, { align: "center", charSpace: 2 });
 
       // Footer disclaimer
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(8);
       pdf.setTextColor(148, 163, 184);
-      pdf.text("Este certificado virtual autogestionado valida la finalización y aprobación del material del curso.", centerX, 200, { align: "center" });
+      const disclaimer = "This self-management virtual certificate is not intended to qualify its participants and graduates for employment. It is intended solely\nfor vocational development, personal and professional enrichment.";
+      pdf.text(disclaimer, pageWidth - 140, 198, { align: "left" });
 
       // Slogan
       pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(12);
+      pdf.setFontSize(16);
       pdf.setTextColor(255, 255, 255);
-      pdf.text("Be Limitless. Be Successful.", 45, pageHeight - 15);
+      pdf.text("Be Limitless. Be Successful.", 15, pageHeight - 15);
 
       // === SAVE ===
       pdf.save(`Certificado_${safeCourseName.replace(/\s+/g, '_')}.pdf`);
