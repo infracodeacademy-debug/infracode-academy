@@ -114,40 +114,42 @@ export const CertificateButton = ({
       pdf.text(safeCourseName, centerX, 142, { align: "center" });
 
       // === BOTTOM SECTION ===
+      const rightCenterX = pageWidth - 80;
+
       // Signature Graphic (Simulated with cursive-like text for now)
       pdf.setFont("times", "italic");
       pdf.setFontSize(32);
       pdf.setTextColor(100, 116, 139); // slate-500
-      pdf.text("InfraCode Academy", centerX, 165, { align: "center" });
+      pdf.text("InfraCode Academy", rightCenterX, 165, { align: "center" });
 
       // Signature Details
       pdf.setDrawColor(148, 163, 184);
       pdf.setLineWidth(0.5);
-      pdf.line(centerX - 60, 170, centerX + 60, 170);
+      pdf.line(rightCenterX - 60, 170, rightCenterX + 60, 170);
       
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(11);
       pdf.setTextColor(49, 46, 129); // indigo-900
-      pdf.text("LUIS DIEGO FERNÁNDEZ CHAVES", centerX, 176, { align: "center" });
+      pdf.text("LUIS DIEGO FERNÁNDEZ CHAVES", rightCenterX, 176, { align: "center" });
       
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(10);
       pdf.setTextColor(79, 70, 229); // indigo-600
-      pdf.text("DIRECTOR DE DESARROLLO ACADÉMICO", centerX, 182, { align: "center" });
+      pdf.text("DIRECTOR DE DESARROLLO ACADÉMICO", rightCenterX, 182, { align: "center" });
 
       // Date
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(12);
       pdf.setTextColor(15, 23, 42);
-      pdf.text(date, centerX, 195, { align: "center" });
+      pdf.text(date, rightCenterX, 195, { align: "center" });
       
       pdf.setDrawColor(148, 163, 184);
-      pdf.line(centerX - 20, 198, centerX + 20, 198);
+      pdf.line(rightCenterX - 20, 198, rightCenterX + 20, 198);
       
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(10);
       pdf.setTextColor(100, 116, 139);
-      pdf.text("FECHA", centerX, 203, { align: "center", charSpace: 2 });
+      pdf.text("FECHA", rightCenterX, 203, { align: "center", charSpace: 2 });
 
       // === SAVE ===
       pdf.save(`Certificado_${safeCourseName.replace(/\s+/g, '_')}.pdf`);
