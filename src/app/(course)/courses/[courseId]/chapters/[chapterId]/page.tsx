@@ -103,50 +103,54 @@ const ChapterIdPage = async (props: {
               />
             )}
           </div>
-          <Separator className="my-8 bg-white/10" />
-          <div className="prose prose-invert prose-slate max-w-none">
-            <div className="text-slate-300 text-lg leading-relaxed whitespace-pre-wrap">
-              {chapter.description}
-            </div>
-          </div>
-          {hasQuiz && (
-            <QuizView 
-              quiz={chapter.quiz!}
-              courseId={params.courseId}
-              chapterId={params.chapterId}
-              nextChapterId={nextChapter?.id}
-              isCompleted={!!userProgress?.isCompleted}
-            />
-          )}
-          {!!attachments.length && (
+          {!isLocked && (
             <>
               <Separator className="my-8 bg-white/10" />
-              <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-x-2">
-                  <File className="h-5 w-5 text-purple-400" />
-                  Recursos Descargables
-                </h3>
-                <div className="space-y-3">
-                  {attachments.map((attachment) => (
-                    <a
-                      href={attachment.url}
-                      target="_blank"
-                      key={attachment.id}
-                      className="flex items-center p-3 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 rounded-lg transition-colors group"
-                    >
-                      <File className="h-4 w-4 mr-2 flex-shrink-0 text-purple-400 group-hover:text-purple-300" />
-                      <p className="text-sm line-clamp-1 flex-1 font-medium group-hover:text-white transition">
-                        {attachment.name}
-                      </p>
-                    </a>
-                  ))}
+              <div className="prose prose-invert prose-slate max-w-none">
+                <div className="text-slate-300 text-lg leading-relaxed whitespace-pre-wrap">
+                  {chapter.description}
                 </div>
               </div>
+              {hasQuiz && (
+                <QuizView 
+                  quiz={chapter.quiz!}
+                  courseId={params.courseId}
+                  chapterId={params.chapterId}
+                  nextChapterId={nextChapter?.id}
+                  isCompleted={!!userProgress?.isCompleted}
+                />
+              )}
+              {!!attachments.length && (
+                <>
+                  <Separator className="my-8 bg-white/10" />
+                  <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-x-2">
+                      <File className="h-5 w-5 text-purple-400" />
+                      Recursos Descargables
+                    </h3>
+                    <div className="space-y-3">
+                      {attachments.map((attachment) => (
+                        <a
+                          href={attachment.url}
+                          target="_blank"
+                          key={attachment.id}
+                          className="flex items-center p-3 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 rounded-lg transition-colors group"
+                        >
+                          <File className="h-4 w-4 mr-2 flex-shrink-0 text-purple-400 group-hover:text-purple-300" />
+                          <p className="text-sm line-clamp-1 flex-1 font-medium group-hover:text-white transition">
+                            {attachment.name}
+                          </p>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
         
-        {!!openAssessment?.isActive && (
+        {!isLocked && !!openAssessment?.isActive && (
           <AssessmentView 
             assessment={openAssessment}
             studentAssessment={studentAssessment}
@@ -156,11 +160,13 @@ const ChapterIdPage = async (props: {
         )}
 
         {/* Render Q&A Forum */}
-        <CourseComments 
-          comments={chapter.comments || []}
-          courseId={params.courseId}
-          chapterId={params.chapterId}
-        />
+        {!isLocked && (
+          <CourseComments 
+            comments={chapter.comments || []}
+            courseId={params.courseId}
+            chapterId={params.chapterId}
+          />
+        )}
         
         {/* Render Reviews */}
         <CourseReviews
