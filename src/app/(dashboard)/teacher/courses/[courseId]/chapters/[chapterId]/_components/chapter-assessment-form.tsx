@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 interface ChapterAssessmentFormProps {
   initialData: OpenAssessment | null;
@@ -33,6 +34,9 @@ const formSchema = z.object({
   }),
   rubric: z.string().min(10, {
     message: "La rúbrica debe tener al menos 10 caracteres",
+  }),
+  points: z.coerce.number().min(0, {
+    message: "Los puntos deben ser mayor o igual a 0",
   }),
 });
 
@@ -50,6 +54,7 @@ export const ChapterAssessmentForm = ({
     defaultValues: {
       prompt: initialData?.prompt || "",
       rubric: initialData?.rubric || "",
+      points: initialData?.points || 0,
     },
   });
 
@@ -96,6 +101,12 @@ export const ChapterAssessmentForm = ({
           {initialData?.prompt && (
             <div className="space-y-4">
               <div>
+                <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-1">Puntos de la actividad</p>
+                <p className="text-sm text-slate-300 bg-black/20 p-3 rounded-lg border border-white/5">
+                  {initialData.points > 0 ? `${initialData.points} puntos (Evaluación Sumativa)` : "0 puntos (Evaluación Formativa)"}
+                </p>
+              </div>
+              <div>
                 <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-1">Instrucción para el estudiante</p>
                 <p className="text-sm text-slate-300 bg-black/20 p-3 rounded-lg border border-white/5">{initialData.prompt}</p>
               </div>
@@ -114,6 +125,25 @@ export const ChapterAssessmentForm = ({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 mt-4 relative z-10"
           >
+            <FormField
+              control={form.control}
+              name="points"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-emerald-400">Puntos de la Evaluación (0 para Formativa)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={isSubmitting}
+                      placeholder="Ej: 5, 10, 20..."
+                      className="bg-black/20 border-white/10 text-white"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-400" />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="prompt"

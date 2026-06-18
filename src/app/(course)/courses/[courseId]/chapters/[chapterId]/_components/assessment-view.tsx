@@ -98,6 +98,12 @@ export const AssessmentView = ({
             textMutedColor = 'text-rose-300';
           }
 
+          // Calculate points if sumative (points > 0)
+          const pointsObtained = assessment.points > 0 ? Math.round((displayScore / 5) * assessment.points) : 0;
+          const scoreText = assessment.points > 0 
+            ? `Nota: ${pointsObtained}/${assessment.points}` 
+            : `Nota: ${displayScore}/5 (Formativa)`;
+
           return (
             <div className={`p-5 rounded-xl border ${cardBgBorder}`}>
               <div className="flex items-center gap-x-3 mb-3">
@@ -110,7 +116,7 @@ export const AssessmentView = ({
                 )}
                 <div>
                   <h4 className={`text-lg font-bold ${textColor}`}>
-                    Nota: {displayScore}/5
+                    {scoreText}
                   </h4>
                   <p className={`text-sm ${textMutedColor}`}>
                     {displayScore >= 3 

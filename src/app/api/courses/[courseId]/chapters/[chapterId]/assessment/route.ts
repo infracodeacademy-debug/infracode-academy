@@ -9,7 +9,7 @@ export async function PATCH(
   try {
     const params = await props.params;
     const { userId } = await auth();
-    const { prompt, rubric } = await req.json();
+    const { prompt, rubric, points } = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -33,12 +33,14 @@ export async function PATCH(
       update: {
         prompt,
         rubric,
+        points: points ? parseInt(points) : 0,
         isActive: true,
       },
       create: {
         chapterId: params.chapterId,
         prompt,
         rubric,
+        points: points ? parseInt(points) : 0,
         isActive: true,
       }
     });

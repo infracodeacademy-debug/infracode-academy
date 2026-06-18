@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 interface QuizViewProps {
   quiz: {
     id: string;
+    points: number;
     questions: {
       id: string;
       prompt: string;
@@ -66,7 +67,7 @@ export const QuizView = ({
       setCorrectAnswers(correct);
       setShowResult(true);
 
-      if (resultScore >= 80) {
+      if (resultScore >= 60) {
         toast.success("¡Felicidades! Has aprobado el cuestionario.");
         // Fire confetti
         confetti({
@@ -81,7 +82,7 @@ export const QuizView = ({
           }, 4000);
         }
       } else {
-        toast.error(`Obtuviste un ${resultScore}%. Necesitas un 80% para aprobar.`);
+        toast.error(`Obtuviste un ${resultScore}%. Necesitas un 60% para aprobar.`);
       }
     } catch {
       toast.error("Algo salió mal al evaluar el cuestionario");
@@ -121,14 +122,23 @@ export const QuizView = ({
           <h2 className="text-2xl font-bold text-white tracking-tight">
             Evaluación del Capítulo
           </h2>
-          {showResult && score !== null && (
-            <div className={`px-4 py-2 rounded-full font-bold text-lg ${score >= 80 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' : 'bg-rose-500/20 text-rose-400 border border-rose-500/50'}`}>
-              Nota: {score}%
-            </div>
-          )}
+          {showResult && score !== null && (() => {
+            const isPassing = score >= 60;
+            const pointsObtained = quiz.points > 0 ? Math.round((score / 100) * quiz.points) : 0;
+            const text = quiz.points > 0 ? `Nota: ${pointsObtained}/${quiz.points}` : `Nota: ${score}%`;
+            return (
+              <div className={`px-4 py-2 rounded-full font-bold text-lg ${
+                isPassing 
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' 
+                  : 'bg-rose-500/20 text-rose-400 border border-rose-500/50'
+              }`}>
+                {text} {quiz.points === 0 && "(Formativa)"}
+              </div>
+            );
+          })()}
         </div>
 
-        {showResult && score !== null && score >= 80 && (
+        {showResult && score !== null && score >= 60 && (
           <div className="mb-8 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-x-4">
             <Trophy className="h-10 w-10 text-emerald-400 flex-shrink-0" />
             <div>
@@ -138,19 +148,19 @@ export const QuizView = ({
           </div>
         )}
 
-        {showResult && score !== null && score < 80 && (
+        {showResult && score !== null && score < 60 && (
           <div className="mb-8 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-x-4">
             <XCircle className="h-10 w-10 text-rose-400 flex-shrink-0" />
             <div>
               <h3 className="text-lg font-bold text-rose-300">No alcanzaste el mínimo</h3>
-              <p className="text-rose-200/70 text-sm">Necesitas un 80% para aprobar. ¡Repasa el contenido e inténtalo de nuevo!</p>
+              <p className="text-rose-200/70 text-sm">Necesitas un 60% para aprobar. ¡Repasa el contenido e inténtalo de nuevo!</p>
             </div>
           </div>
         )}
 
         {!showResult && (
           <p className="text-slate-300 mb-8">
-            Responde todas las preguntas correctamente para poder avanzar. Necesitas obtener al menos un 80% para aprobar y recibir tu certificado final.
+            Responde las preguntas correctamente para poder avanzar. Necesitas obtener al menos un 60% para aprobar. {quiz.points > 0 ? `Esta evaluación vale ${quiz.points} puntos para la nota del curso.` : "Esta evaluación es formativa y no otorga puntos."}
           </p>
         )}
 
@@ -230,7 +240,7 @@ export const QuizView = ({
             </Button>
           ) : (
             <div className="flex gap-x-4 w-full md:w-auto">
-              {score !== null && score < 80 && (
+              {score !== null && score < 60 && (
                 <Button
                   onClick={resetQuiz}
                   variant="outline"
@@ -239,7 +249,7 @@ export const QuizView = ({
                   Intentar de nuevo
                 </Button>
               )}
-              {score !== null && score >= 80 && nextChapterId && (
+              {score !== null && score >= 60 && nextChapterId && (
                 <Button
                   onClick={() => router.push(`/courses/${courseId}/chapters/${nextChapterId}`)}
                   className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-6 text-lg flex-1 md:flex-none"

@@ -12,7 +12,10 @@ export async function GET() {
         { name: "Cloud Computing" },
         { name: "Programación Móvil" },
         { name: "DevOps" },
-      ]
+        { name: "Inglés" },
+        { name: "Habilidades Blandas" },
+      ],
+      skipDuplicates: true,
     });
     return NextResponse.json({ message: "Success" });
   } catch (error) {

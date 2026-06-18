@@ -11,7 +11,14 @@ export async function PATCH(
     const { userId } = await auth();
     const { courseId } = await params;
 
-    if (!userId || !isTeacher(userId)) {
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const userProfile = await db.userProfile.findUnique({ where: { userId } });
+    const isTeacherRole = userProfile?.role === "TEACHER" || userProfile?.role === "ADMIN";
+
+    if (!isTeacherRole) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -42,6 +49,7 @@ export async function PATCH(
       },
       data: {
         isPublished: true,
+        isApproved: userProfile?.role === "ADMIN",
       }
     });
 

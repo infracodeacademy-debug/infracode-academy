@@ -5,34 +5,71 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
-import { isTeacher } from "@/lib/teacher";
-// TODO: Get actual user from Clerk
+import axios from "axios";
+import toast from "react-hot-toast";
 
-export const NavbarRoutes = () => {
+interface NavbarRoutesProps {
+  userRole?: string;
+  isTeacherRequested?: boolean;
+}
+
+export const NavbarRoutes = ({ userRole, isTeacherRequested }: NavbarRoutesProps) => {
   const pathname = usePathname();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isPlayerPage = pathname?.includes("/courses");
+  const isAdminPage = pathname?.startsWith("/admin");
 
-  // TODO: Actual check
-  const isAuthorized = isTeacher();
+  const isTeacher = userRole === "TEACHER" || userRole === "ADMIN";
+  const isAdmin = userRole === "ADMIN";
+
+  const onRequestTeacher = async () => {
+    try {
+      await axios.post("/api/users/request-teacher");
+      toast.success("Solicitud enviada");
+      window.location.reload();
+    } catch {
+      toast.error("Error al solicitar");
+    }
+  }
 
   return (
     <div className="flex gap-x-2 ml-auto items-center">
-      {isTeacherPage || isPlayerPage ? (
+      {isTeacherPage || isPlayerPage || isAdminPage ? (
         <Link href="/dashboard">
           <Button size="sm" variant="ghost" className="text-slate-300 hover:text-white">
             <LogOut className="h-4 w-4 mr-2" />
             Salir
           </Button>
         </Link>
-      ) : isAuthorized ? (
-        <Link href="/teacher/courses">
-          <Button size="sm" variant="ghost" className="text-slate-300 hover:text-white border border-indigo-500/30">
-            Modo Profesor
-          </Button>
-        </Link>
-      ) : null}
+      ) : (
+        <div className="flex gap-x-2">
+          {isAdmin && (
+            <Link href="/admin/analytics">
+              <Button size="sm" variant="outline" className="text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10">
+                Admin Panel
+              </Button>
+            </Link>
+          )}
+          {isTeacher && (
+            <Link href="/teacher/courses">
+              <Button size="sm" variant="ghost" className="text-slate-300 hover:text-white border border-indigo-500/30">
+                Modo Profesor
+              </Button>
+            </Link>
+          )}
+          {userRole === "STUDENT" && !isTeacherRequested && (
+            <Button onClick={onRequestTeacher} size="sm" variant="ghost" className="text-indigo-400 hover:text-indigo-300">
+              Solicitar ser Profesor
+            </Button>
+          )}
+          {userRole === "STUDENT" && isTeacherRequested && (
+            <Button disabled size="sm" variant="ghost" className="text-slate-500">
+              Solicitud Pendiente
+            </Button>
+          )}
+        </div>
+      )}
       <UserButton />
     </div>
   )

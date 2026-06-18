@@ -30,12 +30,31 @@ const teacherRoutes = [
   },
 ];
 
+const adminRoutes = [
+  {
+    icon: BarChart,
+    label: "Ingresos Globales",
+    href: "/admin/analytics",
+  },
+  {
+    icon: List,
+    label: "Aprobación de Cursos",
+    href: "/admin/courses",
+  },
+  {
+    icon: Compass,
+    label: "Usuarios y Roles",
+    href: "/admin/users",
+  },
+];
+
 export const SidebarRoutes = () => {
   const pathname = usePathname();
   
   const isTeacherPage = pathname?.includes("/teacher");
+  const isAdminPage = pathname?.includes("/admin");
   
-  const routes = isTeacherPage ? teacherRoutes : guestRoutes;
+  const routes = isAdminPage ? adminRoutes : isTeacherPage ? teacherRoutes : guestRoutes;
 
   return (
     <div className="flex flex-col w-full">

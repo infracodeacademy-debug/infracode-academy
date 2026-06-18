@@ -8,14 +8,35 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model UserProfile {
+  id                 String   @id @default(uuid())
+  userId             String   @unique // Clerk user ID
+  name               String?
+  email              String?
+  role               UserRole @default(STUDENT)
+  isTeacherRequested Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  courses            Course[]
+}
+
 model Course {
   id          String  @id @default(uuid())
   userId      String  // Clerk user ID (The Admin/Teacher)
+  instructor  UserProfile? @relation(fields: [userId], references: [userId])
   title       String
   description String?
   imageUrl    String?
   price       Float?
   isPublished Boolean @default(false)
+  isApproved  Boolean @default(false)
 
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id])
@@ -115,7 +136,9 @@ model Quiz {
   chapterId String   @unique
   chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   isActive  Boolean  @default(false)
+  points    Int      @default(0)
   questions Question[]
+  studentQuizzes StudentQuiz[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -170,6 +193,7 @@ model OpenAssessment {
   prompt      String   @db.Text
   rubric      String   @db.Text
   isActive    Boolean  @default(false)
+  points      Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -203,4 +227,17 @@ model Review {
 
   @@index([courseId])
   @@unique([userId, courseId])
+}
+
+model StudentQuiz {
+  id             String   @id @default(uuid())
+  userId         String
+  quizId         String
+  quiz           Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  score          Int      // percentage correct (0 to 100)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([quizId])
+  @@unique([userId, quizId])
 }

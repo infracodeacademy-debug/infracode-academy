@@ -1,11 +1,14 @@
 import { Navbar } from "./_components/navbar";
 import { Sidebar } from "./_components/sidebar";
+import { syncUser } from "@/actions/sync-user";
 
-const DashboardLayout = ({
+const DashboardLayout = async ({
   children
 }: {
   children: React.ReactNode;
 }) => {
+  await syncUser();
+
   return ( 
     <div className="h-full bg-slate-950 text-slate-50">
       <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50">

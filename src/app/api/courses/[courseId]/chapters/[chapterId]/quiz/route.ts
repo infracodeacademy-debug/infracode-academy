@@ -51,3 +51,43 @@ export async function POST(
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function PATCH(
+  req: Request,
+  props: { params: Promise<{ courseId: string; chapterId: string }> }
+) {
+  try {
+    const params = await props.params;
+    const { userId } = await auth();
+    const { points } = await req.json();
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const courseOwner = await db.course.findUnique({
+      where: {
+        id: params.courseId,
+        userId: userId,
+      }
+    });
+
+    if (!courseOwner) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const quiz = await db.quiz.update({
+      where: {
+        chapterId: params.chapterId,
+      },
+      data: {
+        points: points ? parseInt(points) : 0,
+      }
+    });
+
+    return NextResponse.json(quiz);
+  } catch (error) {
+    console.log("[QUIZ_PATCH]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}

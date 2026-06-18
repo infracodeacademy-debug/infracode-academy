@@ -54,8 +54,26 @@ export async function POST(
 
     const score = Math.round((correctCount / totalQuestions) * 100);
 
-    // If passed, mark the chapter as complete automatically
-    if (score >= 80) {
+    // Save student quiz score
+    await db.studentQuiz.upsert({
+      where: {
+        userId_quizId: {
+          userId,
+          quizId: quiz.id,
+        }
+      },
+      update: {
+        score,
+      },
+      create: {
+        userId,
+        quizId: quiz.id,
+        score,
+      }
+    });
+
+    // If passed (score >= 60), mark the chapter as complete automatically
+    if (score >= 60) {
       const userProgress = await db.userProgress.findUnique({
         where: {
           userId_chapterId: {

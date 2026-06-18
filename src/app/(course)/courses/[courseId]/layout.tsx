@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { getProgress } from "@/actions/get-progress";
 import { CourseSidebar } from "./_components/course-sidebar";
 import { CourseNavbar } from "./_components/course-navbar";
+import { syncUser } from "@/actions/sync-user";
 
 const CourseLayout = async (props: {
   children: React.ReactNode;
@@ -17,6 +18,8 @@ const CourseLayout = async (props: {
   if (!userId) {
     return redirect("/");
   }
+
+  await syncUser();
 
   const course = await db.course.findUnique({
     where: {

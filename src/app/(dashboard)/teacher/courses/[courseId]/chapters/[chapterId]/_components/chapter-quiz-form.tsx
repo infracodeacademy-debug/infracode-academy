@@ -30,6 +30,9 @@ export const ChapterQuizForm = ({
   const [newQuestionPrompt, setNewQuestionPrompt] = useState("");
   const [newOptionTexts, setNewOptionTexts] = useState<Record<string, string>>({});
   
+  const [points, setPoints] = useState(initialData.quiz?.points || 0);
+  const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
+  
   const router = useRouter();
 
   const toggleQuiz = async () => {
@@ -42,6 +45,21 @@ export const ChapterQuizForm = ({
       toast.error("Algo salió mal");
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  const updatePoints = async () => {
+    try {
+      setIsUpdatingPoints(true);
+      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/quiz`, {
+        points
+      });
+      toast.success("Puntos actualizados");
+      router.refresh();
+    } catch {
+      toast.error("Algo salió mal");
+    } finally {
+      setIsUpdatingPoints(false);
     }
   }
 
@@ -150,6 +168,31 @@ export const ChapterQuizForm = ({
 
         {hasQuiz && initialData.quiz && (
           <div className="space-y-6">
+            <div className="flex items-center gap-x-2 bg-white/5 border border-white/10 rounded-lg p-4">
+              <div className="flex-1">
+                <label className="text-xs font-semibold text-brand-primary uppercase tracking-wider block mb-1">
+                  Puntos del Cuestionario (0 para Formativa)
+                </label>
+                <Input
+                  type="number"
+                  disabled={isLoading || isUpdatingPoints}
+                  value={points}
+                  onChange={(e) => setPoints(parseInt(e.target.value) || 0)}
+                  className="bg-slate-900/50 border-white/10 text-white"
+                  placeholder="Ej: 5, 10, 20..."
+                />
+              </div>
+              <Button
+                onClick={updatePoints}
+                disabled={isLoading || isUpdatingPoints}
+                className="mt-5 bg-brand-primary hover:bg-brand-secondary text-white"
+                size="sm"
+              >
+                {isUpdatingPoints && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Guardar Puntos
+              </Button>
+            </div>
+
             {initialData.quiz.questions.map((question, index) => (
               <div key={question.id} className="bg-white/5 border border-white/10 rounded-lg p-4">
                 <div className="flex justify-between items-start mb-4">
